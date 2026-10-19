@@ -1,14 +1,14 @@
-# 🌸 Mini Cyberdeck
+# Mini Cyberdeck
 
-### A whimsical Y2K-inspired handheld computer 💻
+### A whimsical Y2K-inspired handheld computer 
 
-Mini Cyberdeck is a personal hardware and software project focused on building a small, portable Raspberry Pi computer with a colorful, retro-inspired interface.
+I'm creating a cyberdeck where I personally choose hardware and make the software. This project is focused on building a small, portable Raspberry Pi computer with a colorful, retro-inspired interface.
 
 Inspired by early 2000s technology, translucent electronics, digital stationery, and the simplicity of classic handheld devices, this project combines embedded hardware, C++, Qt, and custom UI design.
 
 The goal is to create a tiny, functional computer with its own home screen and collection of independently developed applications.
 
-## ✨ Project Goals
+## Project Goals
 
 - Build a portable Raspberry Pi-powered cyberdeck with a touchscreen.
 - Create a custom, full-screen, iPod-style application launcher.
@@ -18,18 +18,19 @@ The goal is to create a tiny, functional computer with its own home screen and c
 - Integrate physical controls, including a dedicated Home button.
 - Learn more about embedded systems, electronics, PCB design, and Linux application development.
 
-## 📱 Planned Applications
+## Planned Applications
 
 | Application | Description | Status |
 |---|---|---|
-| 📓 MiniNotes | A digital notebook for creating, editing, renaming, saving, and deleting notes. | Functional; polishing |
-| 🏠 CyberdeckLauncher | The central home screen for opening and managing applications. | In development |
-| 💻 MiniTerminal | Terminal access for Linux commands. | Planned |
-| 🌐 MiniBrowser | Web browsing and internet access. | Planned |
-| 📁 MiniFiles | Browse and manage files. | Planned |
-| ⚙️ Settings | Device preferences and customization. | Planned |
+| MiniNotes | A digital notebook for creating, editing, renaming, saving, and deleting notes. | Functional; polishing |
+| CyberdeckLauncher | The central home screen for opening and managing applications. | In development |
+| Music| iPod style music player | Planned|
+| MiniTerminal | Terminal access for Linux commands. | Planned |
+| MiniBrowser | Web browsing and internet access. | Planned |
+| MiniFiles | Browse and manage files. | Planned |
+| Settings | Device preferences and customization. | Planned |
 
-## 📓 MiniNotes
+## MiniNotes
 
 MiniNotes is the first application developed for Mini Cyberdeck.
 
@@ -57,7 +58,7 @@ The interface uses a soft pastel palette inspired by early 2000s stationery and 
 | Warm Cream | `#FFF8E9` |
 | Soft Pink | `#E8CED7` |
 
-## 🏠 CyberdeckLauncher
+## CyberdeckLauncher
 
 CyberdeckLauncher will serve as the main interface for the device.
 
@@ -75,7 +76,7 @@ The launcher will use Qt's `QProcess` to start applications and manage their lif
 
 The physical Home button and application lifecycle behavior will be implemented and tested during integration.
 
-## 🗂️ Repository Structure
+## Repository Structure
 
 ```text
 miniCyberdeck_APPS/
@@ -100,7 +101,7 @@ miniCyberdeck_APPS/
 
 Additional application directories will be added as development continues.
 
-## 🛠️ Technologies
+## Technologies
 
 **Software**
 - C++17
@@ -110,14 +111,15 @@ Additional application directories will be added as development continues.
 - Git and GitHub
 
 **Hardware**
-- Raspberry Pi
+- Raspberry Pi Zero 2w
 - Touchscreen LCD
-- Rechargeable battery and power-management hardware
+- Rechargeable Lipo battery
+- Pi sugar 3 air (power-management hardware)
 - Custom enclosure and physical controls
 
 Hardware integration is ongoing.
 
-## 🚧 Development Roadmap
+## Development Roadmap
 
 - [x] Build the initial MiniNotes application.
 - [x] Implement note creation, editing, saving, renaming, and deletion.
@@ -130,7 +132,7 @@ Hardware integration is ongoing.
 - [ ] Integrate the touchscreen and power hardware.
 - [ ] Finalize the enclosure and device assembly.
 
-## 🎨 Design Inspiration
+## Design Inspiration
 
 Mini Cyberdeck draws inspiration from:
 
@@ -142,11 +144,11 @@ Mini Cyberdeck draws inspiration from:
 
 The goal is to make the device feel personal, playful, and functional without sacrificing usability.
 
-## 📷 Screenshots
+## Screenshots
 
 Screenshots of MiniNotes and the CyberdeckLauncher will be added as development progresses.
 
-## 🌷 Project Status
+## Project Status
 
 **Active development**
 
@@ -156,4 +158,4 @@ This project is also a hands-on learning experience in C++, Qt, embedded systems
 
 ---
 
-*Made with curiosity, creativity, and lots of pink. ♡*
+*Made in my spear time with lots of tears and struggles ♡*
