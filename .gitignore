@@ -1,0 +1,16 @@
+#Build files
+build/
+**/build/
+cmake-build-*/
+
+# Compiled files
+*.exe
+*.0
+*.obj
+*.dll
+
+# VS Code local settings
+.vscode/
+
+# Notes saved by the app
+MiniNotes/notes
