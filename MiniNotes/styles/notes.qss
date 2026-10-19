@@ -1,0 +1,359 @@
+
+/* =====================================================
+   MININOTES - STYLESHEET
+   Whimsical Y2K Stationery Theme
+
+   Primary Aqua:     #B3EAF0
+   Bubblegum Pink:   #F6B4D2
+   Deep Plum:        #513457
+   Warm Cream:       #FFF8E9
+   Soft Pink Lines:  #E8CED7
+   ===================================================== */
+
+
+/* =====================================================
+   1. GLOBAL TYPOGRAPHY
+   ===================================================== */
+
+QPushButton {
+    font-family: "Nunito";
+    font-size: 14px;
+    font-weight: 600;
+    color: #513457;
+}
+
+
+/* =====================================================
+   2. MAIN PAGE BACKGROUNDS
+   ===================================================== */
+
+QWidget#listPage,
+QWidget#editorPage {
+    background-color: #B3EAF0;
+}
+
+
+/* =====================================================
+   3. DECORATIVE STATIONERY HEADINGS
+   ===================================================== */
+
+QLabel#titleLabel,
+QLabel#deleteTitleLabel {
+    background-color: #F6B4D2;
+    color: #513457;
+
+    border: 2px solid white;
+    border-radius: 12px;
+
+    padding: 8px;
+
+    font-family: "Fredoka";
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   4. NOTES LIST
+   ===================================================== */
+
+QListWidget#notesList {
+    background-color: #FFF8E9;
+    color: #513457;
+
+    font-family: "Nunito";
+    font-size: 15px;
+    font-weight: 400;
+}
+
+QListWidget#notesList::item {
+    color: #513457;
+    padding: 10px;
+    border-bottom: 1px solid #E8CED7;
+}
+
+QListWidget#notesList::item:hover {
+    background-color: #F6B4D2;
+}
+
+
+/* =====================================================
+   5. NOTES LIST BUTTONS
+   ===================================================== */
+
+/* New Note button */
+
+QPushButton#btnNew {
+    background-color: #F6B4D2;
+    color: #513457;
+
+    border: 2px solid white;
+    border-radius: 10px;
+
+    padding: 8px;
+}
+
+QPushButton#btnNew:pressed {
+    background-color: #E994BB;
+}
+
+
+/* Trash button */
+
+QPushButton#btnDelete {
+    background-color: #DDF6F4;
+    color: #513457;
+
+    border: 2px solid white;
+    border-radius: 10px;
+
+    padding: 8px;
+}
+
+
+/* =====================================================
+   6. NOTE EDITOR
+   ===================================================== */
+
+/* Editable note title */
+
+QLineEdit#noteTitleEdit {
+    background-color: #FFF8E9;
+    color: #513457;
+
+    border: 1px solid #D8BFCB;
+    border-radius: 10px;
+
+    padding: 12px;
+
+    font-family: "Nunito";
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+/* Notebook paper */
+
+QTextEdit#textEdit {
+    background-color: #FFF8E9;
+    color: #513457;
+
+    border: 1px solid #D8BFCB;
+    border-radius: 10px;
+
+    padding: 12px;
+
+    font-family: "Nunito";
+    font-size: 14px;
+    font-weight: 400;
+}
+
+
+/* Back arrow button */
+
+QPushButton#btnBack {
+    background-color: #F6B4D2;
+
+    border: 2px solid white;
+    border-radius: 10px;
+
+    padding: 8px;
+}
+
+QPushButton#btnBack:pressed {
+    background-color: #E994BB;
+}
+
+
+/* =====================================================
+   7. SCROLLBARS
+   ===================================================== */
+
+QScrollBar:vertical {
+    background-color: #F8DFE9;
+
+    width: 12px;
+    border: none;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #C47EA6;
+
+    min-height: 30px;
+    border-radius: 5px;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+    border: none;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+
+/* =====================================================
+   8. DELETE NOTES POPUP
+   ===================================================== */
+
+/* Dialog background */
+
+QDialog#deleteDialog {
+    background-color: #B3EAF0;
+}
+
+
+/* Checklist */
+
+QListWidget#deleteList {
+    background-color: #FFF8E9;
+    color: #513457;
+
+    border: 1px solid #D8BFCB;
+    border-radius: 10px;
+
+    padding: 6px;
+
+    font-family: "Nunito";
+    font-size: 15px;
+    font-weight: 400;
+}
+
+QListWidget#deleteList::item {
+    color: #513457;
+
+    padding: 10px;
+    border-bottom: 1px solid #E8CED7;
+}
+
+QListWidget#deleteList::item:hover {
+    background-color: #F6B4D2;
+}
+
+
+/* Unchecked checkbox */
+
+QListWidget#deleteList::indicator:unchecked {
+    background-color: #FFF8E9;
+
+    border: 1px solid #513457;
+    border-radius: 5px;
+
+    width: 18px;
+    height: 18px;
+}
+
+
+/* Checked checkbox */
+
+QListWidget#deleteList::indicator:checked {
+    background-color: #F6B4D2;
+
+    border: 1px solid #513457;
+    border-radius: 5px;
+
+    width: 18px;
+    height: 18px;
+
+    image: url(assets/icons/check.svg);
+}
+
+
+/* Delete popup - Cancel button */
+
+QPushButton#btnCancelDialog {
+    background-color: #DDF6F4;
+
+    border: 2px solid white;
+    border-radius: 10px;
+
+    padding: 8px;
+}
+
+QPushButton#btnCancelDialog:pressed {
+    background-color: #B3EAF0;
+}
+
+
+/* Delete popup - Delete button */
+
+QPushButton#btnDeleteSelected {
+    background-color: #F6B4D2;
+
+    border: 2px solid white;
+    border-radius: 10px;
+
+    padding: 8px;
+}
+
+QPushButton#btnDeleteSelected:pressed {
+    background-color: #E994BB;
+}
+
+
+/* =====================================================
+   9. NEW NOTE POPUP
+   ===================================================== */
+
+/* Dialog background */
+
+QInputDialog#newNoteDialog,
+QInputDialog {
+    background-color: #B3EAF0;
+    color: #513457;
+
+    font-family: "Nunito";
+    font-size: 14px;
+}
+
+
+/* Instruction label */
+
+QInputDialog QLabel {
+    color: #513457;
+
+    font-family: "Fredoka";
+    font-size: 15px;
+}
+
+
+/* Note title input */
+
+QInputDialog QLineEdit {
+    background-color: #FFF8E9;
+    color: #513457;
+
+    border: 1px solid #D8BFCB;
+    border-radius: 10px;
+
+    padding: 8px;
+
+    font-family: "Nunito";
+    font-size: 14px;
+}
+
+
+/* OK and Cancel buttons */
+
+QInputDialog QPushButton {
+    background-color: #F6B4D2;
+    color: #513457;
+
+    border: 2px solid white;
+    border-radius: 10px;
+
+    padding: 8px 12px;
+    min-width: 75px;
+
+    font-family: "Nunito";
+    font-size: 14px;
+    font-weight: 600;
+}
+
+QInputDialog QPushButton:pressed {
+    background-color: #E994BB;
+}
