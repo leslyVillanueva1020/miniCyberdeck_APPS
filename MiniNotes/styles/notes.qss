@@ -3,8 +3,8 @@
    MININOTES - STYLESHEET
    Whimsical Y2K Stationery Theme
 
-   Primary Aqua:     #B3EAF0
-   Bubblegum Pink:   #F6B4D2
+   Primary Aqua:     #aac672
+   Bubblegum Pink:   #E6B1C4
    Deep Plum:        #513457
    Warm Cream:       #FFF8E9
    Soft Pink Lines:  #E8CED7
@@ -29,7 +29,7 @@ QPushButton {
 
 QWidget#listPage,
 QWidget#editorPage {
-    background-color: #B3EAF0;
+    background-color: #aac672;
 }
 
 
@@ -39,7 +39,7 @@ QWidget#editorPage {
 
 QLabel#titleLabel,
 QLabel#deleteTitleLabel {
-    background-color: #F6B4D2;
+    background-color: #E6B1C4;
     color: #513457;
 
     border: 2px solid white;
@@ -73,7 +73,7 @@ QListWidget#notesList::item {
 }
 
 QListWidget#notesList::item:hover {
-    background-color: #F6B4D2;
+    background-color: #E6B1C4;
 }
 
 
@@ -84,7 +84,7 @@ QListWidget#notesList::item:hover {
 /* New Note button */
 
 QPushButton#btnNew {
-    background-color: #F6B4D2;
+    background-color: #E6B1C4;
     color: #513457;
 
     border: 2px solid white;
@@ -101,7 +101,7 @@ QPushButton#btnNew:pressed {
 /* Trash button */
 
 QPushButton#btnDelete {
-    background-color: #DDF6F4;
+    background-color: #ffebab;
     color: #513457;
 
     border: 2px solid white;
@@ -152,7 +152,7 @@ QTextEdit#textEdit {
 /* Back arrow button */
 
 QPushButton#btnBack {
-    background-color: #F6B4D2;
+    background-color: #E6B1C4;
 
     border: 2px solid white;
     border-radius: 10px;
@@ -203,7 +203,7 @@ QScrollBar::sub-page:vertical {
 /* Dialog background */
 
 QDialog#deleteDialog {
-    background-color: #B3EAF0;
+    background-color: #aac672;
 }
 
 
@@ -231,7 +231,7 @@ QListWidget#deleteList::item {
 }
 
 QListWidget#deleteList::item:hover {
-    background-color: #F6B4D2;
+    background-color: #E6B1C4;
 }
 
 
@@ -251,7 +251,7 @@ QListWidget#deleteList::indicator:unchecked {
 /* Checked checkbox */
 
 QListWidget#deleteList::indicator:checked {
-    background-color: #F6B4D2;
+    background-color: #E6B1C4;
 
     border: 1px solid #513457;
     border-radius: 5px;
@@ -266,7 +266,7 @@ QListWidget#deleteList::indicator:checked {
 /* Delete popup - Cancel button */
 
 QPushButton#btnCancelDialog {
-    background-color: #DDF6F4;
+    background-color: #ffebab;
 
     border: 2px solid white;
     border-radius: 10px;
@@ -275,14 +275,14 @@ QPushButton#btnCancelDialog {
 }
 
 QPushButton#btnCancelDialog:pressed {
-    background-color: #B3EAF0;
+    background-color: #aac672;
 }
 
 
 /* Delete popup - Delete button */
 
 QPushButton#btnDeleteSelected {
-    background-color: #F6B4D2;
+    background-color: #E6B1C4;
 
     border: 2px solid white;
     border-radius: 10px;
@@ -303,7 +303,7 @@ QPushButton#btnDeleteSelected:pressed {
 
 QInputDialog#newNoteDialog,
 QInputDialog {
-    background-color: #B3EAF0;
+    background-color: #aac672;
     color: #513457;
 
     font-family: "Nunito";
@@ -340,7 +340,7 @@ QInputDialog QLineEdit {
 /* OK and Cancel buttons */
 
 QInputDialog QPushButton {
-    background-color: #F6B4D2;
+    background-color: #E6B1C4;
     color: #513457;
 
     border: 2px solid white;
