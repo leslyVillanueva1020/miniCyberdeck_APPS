@@ -70,12 +70,22 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     });
 
     connect(btnPrev, &QPushButton::clicked, this, [this](){
-    int previousPage = pageStack->currentIndex() - 1;
+        int previousPage = pageStack->currentIndex() - 1;
+        if (previousPage >= 0) {
+            pageStack->setCurrentIndex(previousPage);
+        }
+    });
 
-    if (previousPage >= 0) {
-        pageStack->setCurrentIndex(previousPage);
-    }
-});
+    connect(pageStack, &QStackedWidget::currentChanged, this,
+        [pageIndicator](int pageIndex){
+            if(pageIndex == 0){
+                pageIndicator->setText("● ○");
+            }
+            else if(pageIndex == 1){
+                pageIndicator->setText("○ ●");
+            }
+        }
+    );
 
     connect(
         btnOpenNotes,
