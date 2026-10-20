@@ -43,11 +43,39 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     gridApps1->addWidget(btnOpenSettings,1, 1);
 
     // ======================= PAGE 2 =============================
-    
+    QPushButton* btnOpenTerminal = new QPushButton("Terminal");
+    gridApps2->addWidget(btnOpenTerminal, 0, 0);
+
+
+    // ============ NAVIGATION TEMP =====================
+    QHBoxLayout* navigationLayout = new QHBoxLayout();
+    QPushButton* btnPrev = new QPushButton("<");
+    QPushButton* btnNext = new QPushButton(">");
+    QLabel* pageIndicator = new QLabel("● ○");
+
+    navigationLayout->addWidget(btnPrev);
+    navigationLayout->addWidget(pageIndicator);
+    navigationLayout->addWidget(btnNext);
 
     //============= ADDING TO MAIN LAYOUT ========================
     mainLayout->addLayout(header);
     mainLayout->addWidget(pageStack);
+    mainLayout->addLayout(navigationLayout);
+
+    connect(btnNext, &QPushButton::clicked, this, [this](){
+        int nextPage = pageStack->currentIndex() + 1;
+        if(nextPage < pageStack->count()){
+            pageStack->setCurrentIndex(nextPage);
+        }
+    });
+
+    connect(btnPrev, &QPushButton::clicked, this, [this](){
+    int previousPage = pageStack->currentIndex() - 1;
+
+    if (previousPage >= 0) {
+        pageStack->setCurrentIndex(previousPage);
+    }
+});
 
     connect(
         btnOpenNotes,
