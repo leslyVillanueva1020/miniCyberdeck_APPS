@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QDebug>
+#include <QtGlobal>
 
 HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     pageStack = new QStackedWidget(this);
@@ -23,6 +24,8 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
 
     mainLayout = new QVBoxLayout(this);
     notesProcess = new QProcess(this);
+
+    trackingSwipe = false;
 
     // ================ PAGE 1 =============================
     QHBoxLayout* header = new QHBoxLayout();
@@ -129,4 +132,56 @@ void HomeWindow::openNotesApp(){
 
     notesProcess->setWorkingDirectory(notesWorkingDirectory);
     notesProcess->start(notesProgram);   
+}
+
+void HomeWindow::mousePressEvent(QMouseEvent* event){
+    swipeStart = event->position().toPoint();
+    trackingSwipe = true;
+    event->accept();
+
+    qDebug() << "Mouse press detected!";
+}
+
+void HomeWindow::mouseReleaseEvent(QMouseEvent* event){
+    if(!trackingSwipe){
+        return;
+    }
+
+    QPoint swipEnd = event->position().toPoint();
+    int horizontalDistance = swipEnd.x() - swipeStart.x(); //negative # mean, left positive # means right
+    int verticalDistance = swipEnd.y() - swipeStart.y();
+    qDebug() << "Swipe distance: " << horizontalDistance;
+
+    const int minimumSwipeDistance = 80;
+
+    if(qAbs(horizontalDistance) < minimumSwipeDistance){
+        trackingSwipe = false;
+        event->accept();
+        return;
+    }
+
+    if(qAbs(horizontalDistance) <= qAbs(verticalDistance)){
+        trackingSwipe = false;
+        event->accept();
+        return;
+    }
+
+    if (horizontalDistance < 0) {
+        int nextPage = pageStack->currentIndex() + 1;
+
+        if (nextPage < pageStack->count()) {
+            pageStack->setCurrentIndex(nextPage);
+        }
+    }
+    else {
+        int previousPage = pageStack->currentIndex() - 1;
+
+        if (previousPage >= 0) {
+            pageStack->setCurrentIndex(previousPage);
+        }
+    }
+
+    trackingSwipe = false;
+
+    event->accept();
 }
