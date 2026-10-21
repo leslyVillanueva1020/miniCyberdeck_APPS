@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QDebug>
+#include <QMouseEvent>
 #include <QtGlobal>
 
 HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
@@ -22,12 +23,16 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     pageStack->addWidget(page1);
     pageStack->addWidget(page2);
 
+    page1->installEventFilter(this);
+    page2-> installEventFilter(this);
+    pageStack->installEventFilter(this);
+
     mainLayout = new QVBoxLayout(this);
     notesProcess = new QProcess(this);
 
     trackingSwipe = false;
 
-    // ================ PAGE 1 =============================
+    // ================ HEADER =============================
     QHBoxLayout* header = new QHBoxLayout();
     QLabel* appName = new QLabel("AQUARIUM LS");
     QLabel* time = new QLabel("10:34 AM");
@@ -36,6 +41,8 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     header->addWidget(time);
     header->addWidget(battery);
 
+
+    // ================ PAGE 1 =============================
     QPushButton* btnOpenNotes = new QPushButton("Notes");
     QPushButton* btnOpenMusic = new QPushButton("Music");
     QPushButton* btnOpenBrowser = new QPushButton("Browser");
@@ -44,12 +51,19 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     gridApps1->addWidget(btnOpenMusic, 0, 1);
     gridApps1->addWidget(btnOpenBrowser, 1,0);
     gridApps1->addWidget(btnOpenSettings,1, 1);
-
+    
     // ======================= PAGE 2 =============================
     QPushButton* btnOpenTerminal = new QPushButton("Terminal");
     gridApps2->addWidget(btnOpenTerminal, 0, 0);
 
 
+    for(QWidget* widget: page1->findChildren<QWidget*>()){
+        widget->installEventFilter(this);
+    }
+
+    for(QWidget* widget: page2->findChildren<QWidget*>()){
+        widget->installEventFilter(this);
+    }
     // ============ NAVIGATION TEMP =====================
     QHBoxLayout* navigationLayout = new QHBoxLayout();
     QPushButton* btnPrev = new QPushButton("<");
@@ -134,54 +148,65 @@ void HomeWindow::openNotesApp(){
     notesProcess->start(notesProgram);   
 }
 
-void HomeWindow::mousePressEvent(QMouseEvent* event){
-    swipeStart = event->position().toPoint();
-    trackingSwipe = true;
-    event->accept();
 
-    qDebug() << "Mouse press detected!";
-}
+bool HomeWindow::eventFilter(QObject* watched, QEvent* event){
+    Q_UNUSED(watched);
 
-void HomeWindow::mouseReleaseEvent(QMouseEvent* event){
-    if(!trackingSwipe){
-        return;
-    }
+    if(event->type() == QEvent::MouseButtonPress){
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
 
-    QPoint swipEnd = event->position().toPoint();
-    int horizontalDistance = swipEnd.x() - swipeStart.x(); //negative # mean, left positive # means right
-    int verticalDistance = swipEnd.y() - swipeStart.y();
-    qDebug() << "Swipe distance: " << horizontalDistance;
-
-    const int minimumSwipeDistance = 80;
-
-    if(qAbs(horizontalDistance) < minimumSwipeDistance){
-        trackingSwipe = false;
-        event->accept();
-        return;
-    }
-
-    if(qAbs(horizontalDistance) <= qAbs(verticalDistance)){
-        trackingSwipe = false;
-        event->accept();
-        return;
-    }
-
-    if (horizontalDistance < 0) {
-        int nextPage = pageStack->currentIndex() + 1;
-
-        if (nextPage < pageStack->count()) {
-            pageStack->setCurrentIndex(nextPage);
+        if(mouseEvent->button() == Qt::LeftButton){
+            swipeStart = mouseEvent->globalPosition().toPoint();
+            trackingSwipe = true;
         }
-    }
-    else {
-        int previousPage = pageStack->currentIndex() - 1;
 
-        if (previousPage >= 0) {
-            pageStack->setCurrentIndex(previousPage);
+        return false;
+    } 
+
+    if(event->type() == QEvent::MouseButtonRelease){
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+
+        if (!trackingSwipe || mouseEvent->button() != Qt::LeftButton) {
+            return false;
         }
+
+        QPoint swipeEnd = mouseEvent->globalPosition().toPoint();
+
+        int horizontalDistance = swipeEnd.x() - swipeStart.x();
+
+        int verticalDistance = swipeEnd.y() - swipeStart.y();
+
+        trackingSwipe = false;
+
+        const int minimumSwipeDistance = 70;
+
+        if (qAbs(horizontalDistance) < minimumSwipeDistance) {
+            return false;
+        }
+
+        if (qAbs(horizontalDistance) <= qAbs(verticalDistance)) {
+            return false;
+        }
+
+        if (horizontalDistance < 0) {
+            int nextPage =
+                pageStack->currentIndex() + 1;
+
+            if (nextPage < pageStack->count()) {
+                pageStack->setCurrentIndex(nextPage);
+            }
+        }
+        else {
+            int previousPage =
+                pageStack->currentIndex() - 1;
+
+            if (previousPage >= 0) {
+                pageStack->setCurrentIndex(previousPage);
+            }
+        }
+
+        return true;
     }
 
-    trackingSwipe = false;
-
-    event->accept();
+    return QWidget::eventFilter(watched, event);
 }

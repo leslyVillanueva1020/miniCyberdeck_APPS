@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include <QPoint>
 #include <QMouseEvent>
+#include <QEvent>
 
 class HomeWindow: public QWidget{
     public:
@@ -26,6 +27,5 @@ class HomeWindow: public QWidget{
 
         void openNotesApp();
     protected:
-        void mousePressEvent(QMouseEvent* event) override;
-        void mouseReleaseEvent(QMouseEvent* event) override;
+        bool eventFilter(QObject* watched, QEvent* event) override;
 };
