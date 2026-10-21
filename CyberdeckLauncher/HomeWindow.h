@@ -3,6 +3,9 @@
 #include <QProcess>
 #include <QStackedWidget>
 #include <QGridLayout>
+#include <QPoint>
+#include <QMouseEvent>
+#include <QEvent>
 
 class HomeWindow: public QWidget{
     public:
@@ -18,6 +21,11 @@ class HomeWindow: public QWidget{
         QWidget* page2;
 
         QProcess* notesProcess;
+ 
+        QPoint swipeStart; //where the mouse first touched
+        bool trackingSwipe; //whether a swipe is currently in progress
 
         void openNotesApp();
+    protected:
+        bool eventFilter(QObject* watched, QEvent* event) override;
 };
