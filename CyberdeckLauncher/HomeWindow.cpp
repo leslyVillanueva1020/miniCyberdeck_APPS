@@ -9,6 +9,7 @@
 #include <QtGlobal>
 
 HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
+    resize(480,320);
     pageStack = new QStackedWidget(this);
 
     page1 = new QWidget();
