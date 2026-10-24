@@ -7,8 +7,8 @@
 #include <QLineEdit>
 
 terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
+    setObjectName("terminalWindow");
     mainLayout = new QVBoxLayout(this);
-    mainLayout->setObjectName("terminalWindow");
 
     QPlainTextEdit* displayCommands = new QPlainTextEdit();
     displayCommands->setReadOnly(true);
@@ -28,12 +28,12 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
     btnRun->setObjectName("btnRun");
 
     bottomRow = new QHBoxLayout();
-    bottomRow->addWidget(commandInput);
+    bottomRow->addWidget(commandInput, 1);
     bottomRow->addWidget(btnClear);
     bottomRow->addWidget(btnHistory);
     bottomRow->addWidget(btnRun);
 
     mainLayout->addWidget(displayCommands);
-    mainLayout->addLayout(bottomRow);
+    mainLayout->addLayout(bottomRow, 0);
     
 }

@@ -1,0 +1,19 @@
+QWidget#terminalWindow{
+    background-color: #08132a;
+}
+
+QPlainTextEdit#displayCommands{
+    background-color: #071426;
+    color: #13E7F5;
+    border: 2px solid #13E7F5;
+    border-radius: 12px;
+    padding: 12px; 
+}
+
+QLineEdit#commandInput{
+    background-color: #071426;
+    color: #F6B4D2;
+    border: 2px solid #13E7F5;
+    border-radius: 10px;
+    padding: 8px;
+}
