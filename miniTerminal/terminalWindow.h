@@ -18,4 +18,6 @@ class terminalWindow: public QWidget{
         QPushButton* btnClear;
         QPushButton* btnHistory;
         QPushButton* btnRun;
+
+        void runCommand();
 };

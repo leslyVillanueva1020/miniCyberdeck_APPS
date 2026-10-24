@@ -6,6 +6,7 @@
 #include <QPlainTextEdit>
 #include <QLineEdit>
 #include <QIcon>
+#include <QDebug>
 
 terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
     setObjectName("terminalWindow");
@@ -42,5 +43,49 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
 
     mainLayout->addWidget(displayCommands);
     mainLayout->addLayout(bottomRow, 0);
+
+    connect(
+        btnClear, //send signal
+        &QPushButton::clicked, 
+        displayCommands, //recieves signal
+        &QPlainTextEdit ::clear //func that runs
+    );
+
+    connect(
+        btnRun,
+        &QPushButton::clicked,
+        this,
+        &terminalWindow::runCommand
+    );
+
+    // if enter pressed after typing run command as well
+    connect(
+        commandInput,
+        &QLineEdit::returnPressed,
+        this,
+        &terminalWindow::runCommand
+    );
+
+    //not sure if commandInput should also be cleared
+    // connect(
+    //     btnClear,
+    //     &QPushButton::clicked,
+    //     commandInput,
+    //     &QLineEdit::clear
+    // );
     
+}
+
+void terminalWindow:: runCommand(){
+    QString command = commandInput->text().trimmed();
+
+    if(command.isEmpty()){
+        return;
+    }
+
+    displayCommands->appendPlainText(
+        "user@cyberdeck:~$ " + command
+    );
+
+    commandInput-> clear();
 }
