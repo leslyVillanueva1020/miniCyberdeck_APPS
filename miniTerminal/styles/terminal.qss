@@ -17,3 +17,38 @@ QLineEdit#commandInput{
     border-radius: 10px;
     padding: 8px;
 }
+
+QPushButton{
+    background-color: #071426;
+    color: #13E7F5;
+    border: 2px solid #13E7F5;
+    border-radius: 10px;
+    padding: 8px 14px;
+    min-height: 36px;
+}
+
+QPushButton:hover{
+    background-color: #0D2340;
+    border-color: #13E7F5; 
+}
+
+QPushButton:pressed{
+    background-color: #0B3040;
+}
+
+QPushButton#btnRun{
+    background-color: #071426;
+    color: #FF3DBD;
+    border: 2px solid #FF3DBD;
+    border-radius: 10px;
+}
+
+QPushButton#btnRun:hover {
+    background-color: #241335;
+    border-color: #FF5CCB;
+    color: #FF5CCB;
+}
+
+QPushButton#btnRun:pressed {
+    background-color: #40132F;
+}

@@ -2,7 +2,10 @@
 
 #include <QWidget>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QPushButton>
+#include <QLabel>
+#include <QPlainTextEdit>
+#include <QLineEdit>
 
 class terminalWindow: public QWidget{
     public:
@@ -10,4 +13,9 @@ class terminalWindow: public QWidget{
     private:
         QVBoxLayout* mainLayout;
         QHBoxLayout* bottomRow;
+        QPlainTextEdit* displayCommands;
+        QLineEdit* commandInput;
+        QPushButton* btnClear;
+        QPushButton* btnHistory;
+        QPushButton* btnRun;
 };
