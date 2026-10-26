@@ -44,8 +44,27 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
     bottomRow->addWidget(btnHistory);
     bottomRow->addWidget(btnRun);
 
-    mainLayout->addWidget(displayCommands);
-    mainLayout->addLayout(bottomRow, 0);
+    historyDrawer = new QFrame();
+    historyDrawer->setObjectName("historyDrawer");
+    historyDrawer->setVisible(false);
+
+    historyList = new QListWidget();
+    historyList->setObjectName("historyList");
+
+    QVBoxLayout* drawerLayout = new QVBoxLayout(historyDrawer);
+    drawerLayout->addWidget(historyList);
+
+    QHBoxLayout* mainRow = new QHBoxLayout();
+    QVBoxLayout* terminalColumn = new QVBoxLayout();
+
+    terminalColumn->addWidget(displayCommands);
+    terminalColumn->addLayout(bottomRow);
+
+    mainRow->addLayout(terminalColumn, 1);
+    mainRow->addWidget(historyDrawer);
+
+    mainLayout->addLayout(mainRow);
+
 
     connect(
         btnClear, //send signal
@@ -97,6 +116,13 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
         commandInput,
         &QLineEdit::clear
     );
+
+    connect(
+        btnHistory,
+        &QPushButton::clicked,
+        this,
+        &terminalWindow::toggleHistory
+    );
     
 }
 
@@ -106,6 +132,13 @@ void terminalWindow:: runCommand(){
     if(command.isEmpty()){
         return;
     }
+
+    HistoryEntry newEntry;
+
+    newEntry.command = command;
+    newEntry.timeStamp = QDateTime::currentDateTime();
+
+    history.append(newEntry);
 
     displayCommands->appendPlainText(
         "user@cyberdeck:~$ " + command
@@ -146,4 +179,14 @@ void terminalWindow::processFinished( int exitCode, QProcess::ExitStatus exitSta
     else{
         qDebug() << "Process crashed.";
     }
+}
+
+void terminalWindow:: toggleHistory(){
+    if(historyDrawer->isVisible()){
+        historyDrawer->setVisible(false);
+    }
+    else {
+        historyDrawer->setVisible(true);
+    }
+
 }
