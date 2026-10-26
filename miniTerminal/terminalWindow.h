@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QPlainTextEdit>
 #include <QLineEdit>
+#include <QProcess>
 
 class terminalWindow: public QWidget{
     public:
@@ -19,5 +20,12 @@ class terminalWindow: public QWidget{
         QPushButton* btnHistory;
         QPushButton* btnRun;
 
+        QProcess* terminalProcess;
+
         void runCommand();
+        void readOutput();
+        void readError();
+
+        void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
+
 };

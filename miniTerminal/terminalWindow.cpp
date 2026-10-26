@@ -7,10 +7,13 @@
 #include <QLineEdit>
 #include <QIcon>
 #include <QDebug>
+#include <QProcess>
 
 terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
     setObjectName("terminalWindow");
     mainLayout = new QVBoxLayout(this);
+
+    terminalProcess = new QProcess(this);
 
     displayCommands = new QPlainTextEdit();
     displayCommands->setReadOnly(true);
@@ -66,13 +69,34 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
         &terminalWindow::runCommand
     );
 
-    //not sure if commandInput should also be cleared
-    // connect(
-    //     btnClear,
-    //     &QPushButton::clicked,
-    //     commandInput,
-    //     &QLineEdit::clear
-    // );
+    connect(
+        terminalProcess,
+        &QProcess::readyReadStandardOutput,
+        this,
+        &terminalWindow::readOutput
+    );
+
+    connect(
+        terminalProcess,
+        &QProcess::readyReadStandardError,
+        this,
+        &terminalWindow::readError
+    );
+
+    connect(
+        terminalProcess,
+        &QProcess::finished,
+        this,
+        &terminalWindow::processFinished
+    );
+
+    // not sure if commandInput should also be cleared
+    connect(
+        btnClear,
+        &QPushButton::clicked,
+        commandInput,
+        &QLineEdit::clear
+    );
     
 }
 
@@ -87,5 +111,39 @@ void terminalWindow:: runCommand(){
         "user@cyberdeck:~$ " + command
     );
 
+   #ifdef Q_OS_WIN
+        terminalProcess->start("cmd.exe", {"/c", command});
+    #else
+        terminalProcess->start("/bin/sh", {"-c", command});
+    #endif
+
     commandInput-> clear();
+}
+
+void terminalWindow::readOutput(){
+    QByteArray output = terminalProcess->readAllStandardOutput();
+    //qbyterarray- raw data recieved from the process
+    //readAllStandardOutput- retrieves the data
+
+    displayCommands->appendPlainText( //appendPlainText- adds to terminal display
+        QString::fromLocal8Bit(output)
+        //QString fromLocal8Bit-converts it into readable text
+    );
+}
+
+void terminalWindow::readError(){
+    QByteArray error = terminalProcess->readAllStandardError();
+
+    displayCommands->appendPlainText(
+        "[error] " + QString::fromLocal8Bit(error)
+    );
+}
+
+void terminalWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus){
+    if(exitStatus == QProcess::NormalExit){
+        qDebug() << "Process finished with exit code: " << exitCode;
+    }
+    else{
+        qDebug() << "Process crashed.";
+    }
 }
