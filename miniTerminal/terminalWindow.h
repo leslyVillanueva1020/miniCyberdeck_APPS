@@ -40,6 +40,7 @@ class terminalWindow: public QWidget{
         };
 
         QList<HistoryEntry> history;
+        QString outputBuffer;
 
         void runCommand();
         void readOutput();

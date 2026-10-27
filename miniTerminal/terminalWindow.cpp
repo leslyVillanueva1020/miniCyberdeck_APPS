@@ -160,36 +160,57 @@ void terminalWindow:: runCommand(){
 }
 
 void terminalWindow::readOutput(){
-    QString output =
+    QString incomingOutput =
         QString::fromLocal8Bit(
             terminalProcess->readAllStandardOutput()
         );
+
+    outputBuffer.append(incomingOutput);
 
     const QString promptStart = "user@cyberdeck:";
     const QColor promptColor("#FF3DBD");
     const QColor outputColor("#13E7F5");
 
+    int latestPrompt =
+        outputBuffer.lastIndexOf(promptStart);
+
+    if(latestPrompt == -1){
+        return;
+    }
+
+    int latestPromptEnd =
+        outputBuffer.indexOf('>', latestPrompt);
+
+    if(latestPromptEnd == -1){
+        return;
+    }
+
+    QString completeOutput =
+        outputBuffer.left(latestPromptEnd + 1);
+
+    outputBuffer.remove(0, latestPromptEnd + 1);
+
     int searchPosition = 0;
 
-    while(searchPosition < output.length()){
+    while(searchPosition < completeOutput.length()){
         int promptPosition =
-            output.indexOf(promptStart, searchPosition);
+            completeOutput.indexOf(
+                promptStart,
+                searchPosition
+            );
 
-        // No more prompts were found.
-        // Everything remaining is normal cyan output.
         if(promptPosition == -1){
             appendColoredText(
-                output.mid(searchPosition),
+                completeOutput.mid(searchPosition),
                 outputColor
             );
 
             break;
         }
 
-        // Add any normal output before the prompt in cyan.
         if(promptPosition > searchPosition){
             appendColoredText(
-                output.mid(
+                completeOutput.mid(
                     searchPosition,
                     promptPosition - searchPosition
                 ),
@@ -198,28 +219,28 @@ void terminalWindow::readOutput(){
         }
 
         int promptEnd =
-            output.indexOf('>', promptPosition);
+            completeOutput.indexOf(
+                '>',
+                promptPosition
+            );
 
-        // If the prompt is incomplete, keep it cyan for now.
         if(promptEnd == -1){
             appendColoredText(
-                output.mid(promptPosition),
+                completeOutput.mid(promptPosition),
                 outputColor
             );
 
             break;
         }
 
-        // Include the > character in the pink prompt.
         QString prompt =
-            output.mid(
+            completeOutput.mid(
                 promptPosition,
                 promptEnd - promptPosition + 1
             );
 
         appendColoredText(prompt, promptColor);
 
-        // Continue processing text after the prompt.
         searchPosition = promptEnd + 1;
     }
 }
