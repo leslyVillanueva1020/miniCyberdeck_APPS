@@ -8,6 +8,8 @@
 #include <QIcon>
 #include <QDebug>
 #include <QProcess>
+#include <QTextCursor>
+#include <QTextCharFormat>
 
 terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
     setObjectName("terminalWindow");
@@ -20,7 +22,7 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
     displayCommands->setObjectName("displayCommands");
 
     commandInput = new QLineEdit();
-    commandInput->setPlaceholderText("user@cyberdeck:~$");
+    commandInput->setPlaceholderText("Type a command ...");
     commandInput->setObjectName("commandInput");
 
     btnClear = new QPushButton("");
@@ -123,7 +125,16 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
         this,
         &terminalWindow::toggleHistory
     );
+
+    connect(
+        historyList,
+        &QListWidget::itemClicked,
+        this,
+        &terminalWindow::historyItemSelected
+    );
     
+    // MUST BE AT END
+    startShell();
 }
 
 void terminalWindow:: runCommand(){
@@ -133,6 +144,11 @@ void terminalWindow:: runCommand(){
         return;
     }
 
+    QByteArray commandBytes = command.toLocal8Bit();
+    commandBytes.append('\n');
+
+    terminalProcess->write(commandBytes);
+
     HistoryEntry newEntry;
 
     newEntry.command = command;
@@ -140,35 +156,80 @@ void terminalWindow:: runCommand(){
 
     history.append(newEntry);
 
-    displayCommands->appendPlainText(
-        "user@cyberdeck:~$ " + command
-    );
-
-   #ifdef Q_OS_WIN
-        terminalProcess->start("cmd.exe", {"/c", command});
-    #else
-        terminalProcess->start("/bin/sh", {"-c", command});
-    #endif
-
     commandInput-> clear();
 }
 
 void terminalWindow::readOutput(){
-    QByteArray output = terminalProcess->readAllStandardOutput();
-    //qbyterarray- raw data recieved from the process
-    //readAllStandardOutput- retrieves the data
+    QString output =
+        QString::fromLocal8Bit(
+            terminalProcess->readAllStandardOutput()
+        );
 
-    displayCommands->appendPlainText( //appendPlainText- adds to terminal display
-        QString::fromLocal8Bit(output)
-        //QString fromLocal8Bit-converts it into readable text
-    );
+    const QString promptStart = "user@cyberdeck:";
+    const QColor promptColor("#FF3DBD");
+    const QColor outputColor("#13E7F5");
+
+    int searchPosition = 0;
+
+    while(searchPosition < output.length()){
+        int promptPosition =
+            output.indexOf(promptStart, searchPosition);
+
+        // No more prompts were found.
+        // Everything remaining is normal cyan output.
+        if(promptPosition == -1){
+            appendColoredText(
+                output.mid(searchPosition),
+                outputColor
+            );
+
+            break;
+        }
+
+        // Add any normal output before the prompt in cyan.
+        if(promptPosition > searchPosition){
+            appendColoredText(
+                output.mid(
+                    searchPosition,
+                    promptPosition - searchPosition
+                ),
+                outputColor
+            );
+        }
+
+        int promptEnd =
+            output.indexOf('>', promptPosition);
+
+        // If the prompt is incomplete, keep it cyan for now.
+        if(promptEnd == -1){
+            appendColoredText(
+                output.mid(promptPosition),
+                outputColor
+            );
+
+            break;
+        }
+
+        // Include the > character in the pink prompt.
+        QString prompt =
+            output.mid(
+                promptPosition,
+                promptEnd - promptPosition + 1
+            );
+
+        appendColoredText(prompt, promptColor);
+
+        // Continue processing text after the prompt.
+        searchPosition = promptEnd + 1;
+    }
 }
 
 void terminalWindow::readError(){
     QByteArray error = terminalProcess->readAllStandardError();
 
-    displayCommands->appendPlainText(
-        "[error] " + QString::fromLocal8Bit(error)
+    appendColoredText(
+        "[error] " + QString::fromLocal8Bit(error),
+        QColor("#13E7F5")
     );
 }
 
@@ -186,7 +247,55 @@ void terminalWindow:: toggleHistory(){
         historyDrawer->setVisible(false);
     }
     else {
+        updateHistoryList();
         historyDrawer->setVisible(true);
     }
 
+}
+
+void terminalWindow:: updateHistoryList(){
+    historyList->clear();
+
+    for(HistoryEntry currEntry: history){
+        QString formattedTime = currEntry.timeStamp.toString("hh:mm:ss AP");
+        QString combinedInfo = formattedTime + " " + currEntry.command;
+        
+        QListWidgetItem* item = new QListWidgetItem(combinedInfo);
+        item->setData(Qt::UserRole, currEntry.command);
+        historyList->addItem(item);
+    }
+}
+
+void terminalWindow:: historyItemSelected(QListWidgetItem* item){
+    QVariant commandData = item->data(Qt::UserRole);
+    QString command = commandData.toString();
+
+    commandInput->setText(command);
+}
+
+void terminalWindow::startShell(){
+    #ifdef Q_OS_WIN
+        terminalProcess->start(
+            "cmd.exe",
+            {"/K", "prompt user@cyberdeck:$P$G"}
+        );
+    #else
+        terminalProcess->start("/bin/bash", {"-i"});
+    #endif
+}
+
+void terminalWindow::appendColoredText(
+    const QString& text,
+    const QColor& color
+){
+    QTextCursor cursor = displayCommands->textCursor();
+
+    cursor.movePosition(QTextCursor::End);
+
+    QTextCharFormat format;
+    format.setForeground(color);
+
+    cursor.insertText(text, format);
+
+    displayCommands->setTextCursor(cursor);
 }

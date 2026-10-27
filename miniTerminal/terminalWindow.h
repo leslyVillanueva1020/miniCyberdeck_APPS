@@ -13,6 +13,9 @@
 #include <QList>
 #include <QFrame>
 #include <QListWidget>
+#include <QListWidgetItem>
+#include <QColor>
+#include <QString>
 
 class terminalWindow: public QWidget{
     public:
@@ -42,7 +45,11 @@ class terminalWindow: public QWidget{
         void readOutput();
         void readError();
         void toggleHistory();
+        void updateHistoryList();
+        void historyItemSelected(QListWidgetItem* item);
+        void startShell();
 
         void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
+        void appendColoredText(const QString& text, const QColor& color);
 
 };
