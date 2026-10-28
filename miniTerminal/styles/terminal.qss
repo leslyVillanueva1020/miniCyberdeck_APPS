@@ -1,0 +1,101 @@
+QWidget#terminalWindow{
+    background-color: #08132a;
+}
+
+QPlainTextEdit#displayCommands{
+    background-color: #071426;
+    color: #13E7F5;
+    border: 2px solid #13E7F5;
+    border-radius: 12px;
+    padding: 12px; 
+}
+
+QLineEdit#commandInput{
+    background-color: #071426;
+    color: #F6B4D2;
+    border: 2px solid #13E7F5;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+QPushButton{
+    background-color: #071426;
+    color: #13E7F5;
+    border: 2px solid #13E7F5;
+    border-radius: 10px;
+    padding: 8px 14px;
+    min-height: 36px;
+}
+
+QPushButton:hover{
+    background-color: #0D2340;
+    border-color: #13E7F5; 
+}
+
+QPushButton:pressed{
+    background-color: #0B3040;
+}
+
+QPushButton:disabled{
+    background-color: #071426;
+    color: #52647A;
+    border-color: #52647A;
+}
+
+QPushButton#btnRun{
+    background-color: #071426;
+    color: #FF3DBD;
+    border: 2px solid #FF3DBD;
+    border-radius: 10px;
+}
+
+QPushButton#btnRun:hover {
+    background-color: #241335;
+    border-color: #FF5CCB;
+    color: #FF5CCB;
+}
+
+QPushButton#btnRun:pressed {
+    background-color: #40132F;
+}
+
+QFrame#historyDrawer {
+    background-color: #071426;
+    border: 2px solid #13E7F5;
+    border-radius: 12px;
+    padding: 10px;
+    min-width: 220px;
+}
+
+QLabel#historyTitle {
+    color: #FF3DBD;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px;
+}
+
+QListWidget#historyList {
+    background-color: transparent;
+    color: #13E7F5;
+    border: none;
+    padding: 4px;
+}
+
+QListWidget#historyList::item {
+    background-color: #0A1D36;
+    border: 1px solid #153653;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 4px 0px;
+}
+
+QListWidget#historyList::item:hover {
+    background-color: #102A47;
+    border-color: #13E7F5;
+}
+
+QListWidget#historyList::item:selected {
+    background-color: #241335;
+    color: #FF3DBD;
+    border: 1px solid #FF3DBD;
+}

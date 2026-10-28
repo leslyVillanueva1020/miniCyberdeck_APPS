@@ -8,6 +8,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QDialogButtonBox>
+#include <QIcon>
 
 NotesWindow:: NotesWindow(QWidget* parent)
     : QWidget(parent){                     
