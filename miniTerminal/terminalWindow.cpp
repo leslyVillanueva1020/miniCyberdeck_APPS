@@ -74,6 +74,17 @@ terminalWindow::terminalWindow(QWidget* parent)
 
     mainLayout->addLayout(mainRow);
 
+    // Temporary Home button
+    QPushButton* btnHomeScreen = new QPushButton("Home");
+    mainLayout->addWidget(btnHomeScreen);
+
+    connect(
+        btnHomeScreen,
+        &QPushButton::clicked,
+        this,
+        &terminalWindow::goHome
+    );
+
     connect(
         btnClear,
         &QPushButton::clicked,
@@ -416,4 +427,9 @@ void terminalWindow::appendColoredText(
     cursor.insertText(text, format);
 
     displayCommands->setTextCursor(cursor);
+}
+
+void terminalWindow::goHome()
+{
+    close();
 }

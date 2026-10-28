@@ -45,6 +45,7 @@ class terminalWindow: public QWidget{
         
         bool commandRunning = false;
     
+        void goHome();
         void runCommand();
         void readOutput();
         void readError();
