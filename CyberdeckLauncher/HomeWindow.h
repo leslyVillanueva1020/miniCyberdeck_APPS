@@ -21,11 +21,14 @@ class HomeWindow: public QWidget{
         QWidget* page2;
 
         QProcess* notesProcess;
+        QProcess* terminalProcess;
  
         QPoint swipeStart; //where the mouse first touched
         bool trackingSwipe; //whether a swipe is currently in progress
 
         void openNotesApp();
+        void openTerminalApp();
+
     protected:
         bool eventFilter(QObject* watched, QEvent* event) override;
 };

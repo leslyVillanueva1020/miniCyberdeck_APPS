@@ -30,6 +30,7 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
 
     mainLayout = new QVBoxLayout(this);
     notesProcess = new QProcess(this);
+    terminalProcess = new QProcess(this);
 
     trackingSwipe = false;
 
@@ -112,10 +113,53 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
         &HomeWindow::openNotesApp
     );
 
-    connect(notesProcess, &QProcess::started, this, [this](){
+    connect(
+        notesProcess, 
+        &QProcess::started, 
+        this, 
+        [this](){
         qDebug() << "MiniNotes Started successfully!";
         hide();
     });
+
+    connect(
+    btnOpenTerminal,
+    &QPushButton::clicked,
+    this,
+    &HomeWindow::openTerminalApp
+    );
+
+    connect(
+        terminalProcess,
+        &QProcess::started,
+        this,
+        [this]() {
+            qDebug() << "MiniTerminal started successfully!";
+            hide();
+        }
+    );
+
+    connect(
+        terminalProcess,
+        &QProcess::errorOccurred,
+        this,
+        [this](QProcess::ProcessError) {
+            qDebug() << "MiniTerminal failed to start:"
+                    << terminalProcess->errorString();
+        }
+    );
+
+    connect(
+        terminalProcess,
+        &QProcess::finished,
+        this,
+        [this](int exitCode, QProcess::ExitStatus) {
+            qDebug() << "MiniTerminal closed.";
+            qDebug() << "Exit code:" << exitCode;
+
+            show();
+        }
+    );
 
     connect(notesProcess, &QProcess::errorOccurred, this,
     [this](QProcess::ProcessError error){
@@ -149,6 +193,24 @@ void HomeWindow::openNotesApp(){
     notesProcess->start(notesProgram);   
 }
 
+void HomeWindow::openTerminalApp()
+{
+    if (terminalProcess->state() == QProcess::Running) {
+        qDebug() << "MiniTerminal is already running.";
+        return;
+    }
+
+    qDebug() << "Open Terminal App button clicked!";
+
+    QString terminalProgram =
+        "C:/Users/alexi/miniCyberdeck_APPS/miniTerminal/build/miniTerminal.exe";
+
+    QString terminalWorkingDirectory =
+        "C:/Users/alexi/miniCyberdeck_APPS/miniTerminal";
+
+    terminalProcess->setWorkingDirectory(terminalWorkingDirectory);
+    terminalProcess->start(terminalProgram);
+}
 
 bool HomeWindow::eventFilter(QObject* watched, QEvent* event){
     Q_UNUSED(watched);
