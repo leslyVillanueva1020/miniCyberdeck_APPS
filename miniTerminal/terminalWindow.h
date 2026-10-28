@@ -28,6 +28,7 @@ class terminalWindow: public QWidget{
         QPushButton* btnClear;
         QPushButton* btnHistory;
         QPushButton* btnRun;
+        QLabel* historyTitle;
 
         QProcess* terminalProcess;
 
@@ -43,7 +44,7 @@ class terminalWindow: public QWidget{
         QString outputBuffer;
         
         bool commandRunning = false;
-
+    
         void runCommand();
         void readOutput();
         void readError();

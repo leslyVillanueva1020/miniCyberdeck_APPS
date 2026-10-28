@@ -20,6 +20,9 @@ terminalWindow::terminalWindow(QWidget* parent)
 
     terminalProcess = new QProcess(this);
 
+    historyTitle = new QLabel("COMMAND HISTORY");
+    historyTitle->setObjectName("historyTitle");
+
     displayCommands = new QPlainTextEdit();
     displayCommands->setReadOnly(true);
     displayCommands->setObjectName("displayCommands");
@@ -57,6 +60,7 @@ terminalWindow::terminalWindow(QWidget* parent)
     historyList->setObjectName("historyList");
 
     QVBoxLayout* drawerLayout = new QVBoxLayout(historyDrawer);
+    drawerLayout->addWidget(historyTitle);
     drawerLayout->addWidget(historyList);
 
     QHBoxLayout* mainRow = new QHBoxLayout();
