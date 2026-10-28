@@ -137,10 +137,14 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
     startShell();
 }
 
-void terminalWindow:: runCommand(){
+void terminalWindow::runCommand(){
     QString command = commandInput->text().trimmed();
 
     if(command.isEmpty()){
+        return;
+    }
+
+    if(commandRunning){
         return;
     }
 
@@ -148,6 +152,7 @@ void terminalWindow:: runCommand(){
     commandBytes.append('\n');
 
     terminalProcess->write(commandBytes);
+    commandRunning = true;
 
     HistoryEntry newEntry;
 
@@ -156,7 +161,7 @@ void terminalWindow:: runCommand(){
 
     history.append(newEntry);
 
-    commandInput-> clear();
+    commandInput->clear();
 }
 
 void terminalWindow::readOutput(){

@@ -42,6 +42,9 @@ class terminalWindow: public QWidget{
         QList<HistoryEntry> history;
         QString outputBuffer;
 
+        QProcess* terminalProcess;
+        bool commandRunning = false;
+
         void runCommand();
         void readOutput();
         void readError();
