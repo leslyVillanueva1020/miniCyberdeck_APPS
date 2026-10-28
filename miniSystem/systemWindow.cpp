@@ -1,99 +1,118 @@
 #include "systemWindow.h"
 
-#include <QVBoxLayout>
+#include <QCheckBox>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QSlider>
+#include <QStackedWidget>
+#include <QVBoxLayout>
 
-systemWindow::systemWindow(QWidget* parent): QWidget(parent){
-    mainLayout = new QVBoxLayout(this);
-    mainLayout->setObjectName("mainLayout");
+systemWindow::systemWindow(QWidget* parent): QWidget(parent)
+{
+    setWindowTitle("miniSystem");
+    resize(480, 320);
 
-    // ================== TITLE ROW SECTION =====================
-    titleRow = new QHBoxLayout();
-    titleRow->setObjectName("titleRow");
+    // The main window contains the page stack.
+    auto* windowLayout = new QVBoxLayout(this);
 
-    title = new QLabel("Aquarium LS miniSystem");
-    QLabel* fishes = new QLabel("🐟🫧");
+    pageStack = new QStackedWidget(this);
+    windowLayout->addWidget(pageStack);
 
-    titleRow->addWidget(title);
-    titleRow->addWidget(fishes);
+    // The stack contains two separate pages.
+    overviewPage = new QWidget();
+    settingsPage = new QWidget();
 
-    mainLayout->addLayout(titleRow);
+    pageStack->addWidget(overviewPage);
+    pageStack->addWidget(settingsPage);
 
-    // =================== MIDDLE VBOX SECTION =====================
-    midSection = new QVBoxLayout();
-    midSection->setObjectName("midSection");
+    // -------- Overview page --------
+    auto* overviewLayout = new QVBoxLayout(overviewPage);
 
-    //----------- topMidSection --------------
-    topMidSection = new QHBoxLayout();
+    auto* titleRow = new QHBoxLayout();
+    titleRow->addWidget(new QLabel("Aquarium LS miniSystem"));
+    titleRow->addStretch();
+    titleRow->addWidget(new QLabel("🐟🫧"));
+    overviewLayout->addLayout(titleRow);
 
-    // left side---------------
-    leftSide = new QVBoxLayout();
-    leftSide->setObjectName("leftSide");
+    auto* statusRow = new QHBoxLayout();
 
-    QLabel* time = new QLabel("11:37");
-    QLabel* date = new QLabel("Tue, Oct 28");
+    auto* clockColumn = new QVBoxLayout();
+    clockColumn->addWidget(new QLabel("11:37"));
+    clockColumn->addWidget(new QLabel("Tue, Oct 28"));
+    statusRow->addLayout(clockColumn);
 
-    leftSide->addWidget(time);
-    leftSide->addWidget(date);
+    auto* statusColumn = new QVBoxLayout();
+    statusColumn->addWidget(new QLabel("Battery 82% — not charging"));
+    statusColumn->addWidget(new QLabel("Wi-Fi connected: Home Wi-Fi"));
+    statusRow->addLayout(statusColumn);
 
-    topMidSection->addLayout(leftSide);
+    overviewLayout->addLayout(statusRow);
 
-    // right side---------------
-    rightSide = new QVBoxLayout();
-    rightSide->setObjectName("rightSide");
+    auto* deviceRow = new QHBoxLayout();
+    deviceRow->addWidget(new QLabel("Raspberry Pi"));
 
-    QLabel* battery = new QLabel("Battery 82% not charging");
-    QLabel* wifi = new QLabel("Connected Home Wifi");
+    auto* deviceInfo = new QVBoxLayout();
+    deviceInfo->addWidget(new QLabel("Raspberry Pi Zero 2 W"));
+    deviceInfo->addWidget(new QLabel("IP 192.168.1.42"));
+    deviceInfo->addWidget(new QLabel("Storage 64%"));
+    deviceRow->addLayout(deviceInfo);
 
-    rightSide->addWidget(battery);
-    rightSide->addWidget(wifi);
+    overviewLayout->addLayout(deviceRow);
+    overviewLayout->addStretch();
 
-    topMidSection->addLayout(rightSide);
+    auto* overviewButtons = new QHBoxLayout();
+    auto* btnHome = new QPushButton("Home");
+    auto* btnShutdown = new QPushButton("Shutdown");
+    auto* btnSettings = new QPushButton("Settings");
 
-    midSection->addLayout(topMidSection);
+    overviewButtons->addWidget(btnHome);
+    overviewButtons->addWidget(btnShutdown);
+    overviewButtons->addWidget(btnSettings);
+    overviewLayout->addLayout(overviewButtons);
 
-    //------------- Bottom Section -----------
-    bottomMidSection = new QHBoxLayout();
-    bottomMidSection->setObjectName("bottomMidSection");
+    // -------- Settings page --------
+    auto* settingsLayout = new QVBoxLayout(settingsPage);
 
-    QLabel* rasIcon = new QLabel("Ras Pi Icon");
+    auto* settingsHeader = new QHBoxLayout();
+    settingsHeader->addWidget(new QLabel("miniSystem Settings"));
+    settingsHeader->addStretch();
 
-    infoSection = new QVBoxLayout();
+    auto* btnBack = new QPushButton("Back");
+    settingsHeader->addWidget(btnBack);
+    settingsLayout->addLayout(settingsHeader);
 
-    QLabel* raspberryInfo = new QLabel("Raspberry Pi Zero 2W");
-    QLabel* rasIP = new QLabel("IP 192.168.1.42");
-    QLabel* rasStorage = new QLabel("Storage 64%");
+    settingsLayout->addWidget(new QLabel("Screen brightness"));
 
-    infoSection->addWidget(raspberryInfo);
-    infoSection->addWidget(rasIP);
-    infoSection->addWidget(rasStorage);
+    auto* brightnessRow = new QHBoxLayout();
+    auto* brightnessSlider = new QSlider(Qt::Horizontal);
+    brightnessSlider->setRange(0, 100);
+    brightnessSlider->setValue(70);
 
-    bottomMidSection->addWidget(rasIcon);
+    auto* brightnessValue = new QLabel("70%");
+    brightnessRow->addWidget(brightnessSlider);
+    brightnessRow->addWidget(brightnessValue);
+    settingsLayout->addLayout(brightnessRow);
 
-    bottomMidSection->addLayout(infoSection);
+    auto* bluetoothToggle = new QCheckBox("Bluetooth on");
+    bluetoothToggle->setChecked(true);
+    settingsLayout->addWidget(bluetoothToggle);
+    settingsLayout->addStretch();
 
-    midSection->addLayout(bottomMidSection);
+    // Update the number next to the slider as it moves.
+    connect(brightnessSlider, &QSlider::valueChanged,
+            this, [brightnessValue](int value) {
+        brightnessValue->setText(QString("%1%").arg(value));
+    });
 
-    mainLayout->addLayout(midSection);
+    // Switch between the two pages.
+    connect(btnSettings, &QPushButton::clicked,
+            this, [this]() {
+        pageStack->setCurrentWidget(settingsPage);
+    });
 
-    // ================== BOTTOM ROW SECTION =======================
-    bottomRow = new QHBoxLayout();
-
-    btnHome =new QPushButton("Home");
-    btnHome->setObjectName("btnHome");
-
-    btnShutdown = new QPushButton("Shutdown");
-    btnShutdown->setObjectName("btnShutdown");
-
-    btnSettings = new QPushButton("Settings");
-    btnSettings->setObjectName("btnSettings");
-
-    bottomRow->addWidget(btnHome);
-    bottomRow->addWidget(btnShutdown);
-    bottomRow->addWidget(btnSettings);
-      
-    mainLayout->addLayout(bottomRow);
-
+    connect(btnBack, &QPushButton::clicked,
+            this, [this]() {
+        pageStack->setCurrentWidget(overviewPage);
+    });
 }
