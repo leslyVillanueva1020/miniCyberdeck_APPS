@@ -51,6 +51,7 @@ class terminalWindow: public QWidget{
         void updateHistoryList();
         void historyItemSelected(QListWidgetItem* item);
         void startShell();
+        void handleProcessError(QProcess::ProcessError error);
 
         void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
         void appendColoredText(const QString& text, const QColor& color);

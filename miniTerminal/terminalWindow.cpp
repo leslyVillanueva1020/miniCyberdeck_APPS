@@ -10,8 +10,11 @@
 #include <QProcess>
 #include <QTextCursor>
 #include <QTextCharFormat>
+#include <QProcessEnvironment>
 
-terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
+terminalWindow::terminalWindow(QWidget* parent)
+    : QWidget(parent)
+{
     setObjectName("terminalWindow");
     mainLayout = new QVBoxLayout(this);
 
@@ -67,12 +70,11 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
 
     mainLayout->addLayout(mainRow);
 
-
     connect(
-        btnClear, //send signal
-        &QPushButton::clicked, 
-        displayCommands, //recieves signal
-        &QPlainTextEdit ::clear //func that runs
+        btnClear,
+        &QPushButton::clicked,
+        displayCommands,
+        &QPlainTextEdit::clear
     );
 
     connect(
@@ -82,7 +84,6 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
         &terminalWindow::runCommand
     );
 
-    // if enter pressed after typing run command as well
     connect(
         commandInput,
         &QLineEdit::returnPressed,
@@ -111,12 +112,27 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
         &terminalWindow::processFinished
     );
 
-    // not sure if commandInput should also be cleared
+    connect(
+        terminalProcess,
+        &QProcess::errorOccurred,
+        this,
+        &terminalWindow::handleProcessError
+    );
+
     connect(
         btnClear,
         &QPushButton::clicked,
         commandInput,
         &QLineEdit::clear
+    );
+
+    connect(
+        btnClear,
+        &QPushButton::clicked,
+        this,
+        [this]() {
+            outputBuffer.clear();
+        }
     );
 
     connect(
@@ -132,12 +148,12 @@ terminalWindow:: terminalWindow(QWidget* parent): QWidget(parent){
         this,
         &terminalWindow::historyItemSelected
     );
-    
-    // MUST BE AT END
+
     startShell();
 }
 
-void terminalWindow::runCommand(){
+void terminalWindow::runCommand()
+{
     QString command = commandInput->text().trimmed();
 
     if(command.isEmpty()){
@@ -153,9 +169,9 @@ void terminalWindow::runCommand(){
 
     terminalProcess->write(commandBytes);
     commandRunning = true;
+    btnRun->setEnabled(false);
 
     HistoryEntry newEntry;
-
     newEntry.command = command;
     newEntry.timeStamp = QDateTime::currentDateTime();
 
@@ -164,7 +180,8 @@ void terminalWindow::runCommand(){
     commandInput->clear();
 }
 
-void terminalWindow::readOutput(){
+void terminalWindow::readOutput()
+{
     QString incomingOutput =
         QString::fromLocal8Bit(
             terminalProcess->readAllStandardOutput()
@@ -189,6 +206,9 @@ void terminalWindow::readOutput(){
     if(latestPromptEnd == -1){
         return;
     }
+
+    commandRunning = false;
+    btnRun->setEnabled(true);
 
     QString completeOutput =
         outputBuffer.left(latestPromptEnd + 1);
@@ -250,7 +270,8 @@ void terminalWindow::readOutput(){
     }
 }
 
-void terminalWindow::readError(){
+void terminalWindow::readError()
+{
     QByteArray error = terminalProcess->readAllStandardError();
 
     appendColoredText(
@@ -259,62 +280,129 @@ void terminalWindow::readError(){
     );
 }
 
-void terminalWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus){
+void terminalWindow::processFinished(
+    int exitCode,
+    QProcess::ExitStatus exitStatus
+)
+{
+    commandRunning = false;
+    btnRun->setEnabled(false);
+
     if(exitStatus == QProcess::NormalExit){
-        qDebug() << "Process finished with exit code: " << exitCode;
+        appendColoredText(
+            "\n[shell exited with code " +
+                QString::number(exitCode) + "]\n",
+            QColor("#FF3DBD")
+        );
     }
     else{
-        qDebug() << "Process crashed.";
+        appendColoredText(
+            "\n[shell crashed]\n",
+            QColor("#FF3DBD")
+        );
     }
 }
 
-void terminalWindow:: toggleHistory(){
+void terminalWindow::handleProcessError(
+    QProcess::ProcessError error
+)
+{
+    if(error == QProcess::FailedToStart){
+        appendColoredText(
+            "\n[error] Could not start the shell.\n",
+            QColor("#FF3DBD")
+        );
+    }
+    else{
+        appendColoredText(
+            "\n[error] The shell process encountered a problem.\n",
+            QColor("#FF3DBD")
+        );
+    }
+
+    commandRunning = false;
+    btnRun->setEnabled(false);
+}
+
+void terminalWindow::toggleHistory()
+{
     if(historyDrawer->isVisible()){
         historyDrawer->setVisible(false);
     }
-    else {
+    else{
         updateHistoryList();
         historyDrawer->setVisible(true);
     }
-
 }
 
-void terminalWindow:: updateHistoryList(){
+void terminalWindow::updateHistoryList()
+{
     historyList->clear();
 
-    for(HistoryEntry currEntry: history){
-        QString formattedTime = currEntry.timeStamp.toString("hh:mm:ss AP");
-        QString combinedInfo = formattedTime + " " + currEntry.command;
-        
-        QListWidgetItem* item = new QListWidgetItem(combinedInfo);
-        item->setData(Qt::UserRole, currEntry.command);
+    for(HistoryEntry currEntry : history){
+        QString formattedTime =
+            currEntry.timeStamp.toString("hh:mm:ss AP");
+
+        QString combinedInfo =
+            formattedTime + " " + currEntry.command;
+
+        QListWidgetItem* item =
+            new QListWidgetItem(combinedInfo);
+
+        item->setData(
+            Qt::UserRole,
+            currEntry.command
+        );
+
         historyList->addItem(item);
     }
 }
 
-void terminalWindow:: historyItemSelected(QListWidgetItem* item){
-    QVariant commandData = item->data(Qt::UserRole);
-    QString command = commandData.toString();
+void terminalWindow::historyItemSelected(
+    QListWidgetItem* item
+)
+{
+    QVariant commandData =
+        item->data(Qt::UserRole);
+
+    QString command =
+        commandData.toString();
 
     commandInput->setText(command);
 }
 
-void terminalWindow::startShell(){
-    #ifdef Q_OS_WIN
-        terminalProcess->start(
-            "cmd.exe",
-            {"/K", "prompt user@cyberdeck:$P$G"}
-        );
-    #else
-        terminalProcess->start("/bin/bash", {"-i"});
-    #endif
+void terminalWindow::startShell()
+{
+#ifdef Q_OS_WIN
+    terminalProcess->start(
+        "cmd.exe",
+        {"/K", "prompt user@cyberdeck:$P$G"}
+    );
+#else
+    QProcessEnvironment environment =
+        QProcessEnvironment::systemEnvironment();
+
+    environment.insert(
+        "PS1",
+        "user@cyberdeck:\\w>"
+    );
+
+    terminalProcess->setProcessEnvironment(environment);
+
+    terminalProcess->start(
+        "/bin/bash",
+        {"--noprofile", "--norc", "-i"}
+    );
+#endif
 }
 
 void terminalWindow::appendColoredText(
     const QString& text,
     const QColor& color
-){
-    QTextCursor cursor = displayCommands->textCursor();
+)
+{
+    QTextCursor cursor =
+        displayCommands->textCursor();
 
     cursor.movePosition(QTextCursor::End);
 
