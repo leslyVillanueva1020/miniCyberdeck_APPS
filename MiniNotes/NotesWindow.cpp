@@ -10,9 +10,10 @@
 #include <QDialogButtonBox>
 #include <QIcon>
 
-NotesWindow:: NotesWindow(QWidget* parent)
-    : QWidget(parent){                     
+NotesWindow:: NotesWindow(QWidget* parent) : QWidget(parent){                     
     // this means that id nobody gives me a parent use nullptr when declaration
+
+    resize(480, 320);
 
     pageStack = new QStackedWidget();
 

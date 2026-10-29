@@ -1,6 +1,7 @@
 #include "systemWindow.h"
 
 #include <QCheckBox>
+#include <QFrame>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
@@ -8,104 +9,247 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-systemWindow::systemWindow(QWidget* parent): QWidget(parent)
+systemWindow::systemWindow(QWidget* parent)
+    : QWidget(parent)
 {
     setWindowTitle("miniSystem");
     resize(480, 320);
 
-    // The main window contains the page stack.
+    // The main window displays one page from the stack at a time.
     auto* windowLayout = new QVBoxLayout(this);
+    windowLayout->setContentsMargins(0, 0, 0, 0);
 
     pageStack = new QStackedWidget(this);
     windowLayout->addWidget(pageStack);
 
-    // The stack contains two separate pages.
+    // Create the two pages.
     overviewPage = new QWidget();
+    overviewPage->setObjectName("overviewPage");
+
     settingsPage = new QWidget();
+    settingsPage->setObjectName("settingsPage");
 
     pageStack->addWidget(overviewPage);
     pageStack->addWidget(settingsPage);
 
-    // -------- Overview page --------
+    // ======================== OVERVIEW PAGE ========================
+
     auto* overviewLayout = new QVBoxLayout(overviewPage);
+    overviewLayout->setContentsMargins(12, 10, 12, 10);
+    overviewLayout->setSpacing(8);
 
-    auto* titleRow = new QHBoxLayout();
-    titleRow->addWidget(new QLabel("Aquarium LS miniSystem"));
+    // App header
+    auto* appHeader = new QFrame();
+    appHeader->setObjectName("appHeader");
+
+    auto* titleRow = new QHBoxLayout(appHeader);
+    titleRow->setContentsMargins(10, 4, 10, 4);
+
+    auto* title = new QLabel("AQUARIUM LS  miniSystem");
+    title->setObjectName("pageTitle");
+
+    auto* fish = new QLabel("🐟");
+    fish->setObjectName("fishIcon");
+
+    titleRow->addWidget(title);
     titleRow->addStretch();
-    titleRow->addWidget(new QLabel("🐟🫧"));
-    overviewLayout->addLayout(titleRow);
+    titleRow->addWidget(fish);
 
+    overviewLayout->addWidget(appHeader);
+
+    // Clock, battery, and Wi-Fi cards
     auto* statusRow = new QHBoxLayout();
+    statusRow->setSpacing(8);
 
-    auto* clockColumn = new QVBoxLayout();
-    clockColumn->addWidget(new QLabel("11:37"));
-    clockColumn->addWidget(new QLabel("Tue, Oct 28"));
-    statusRow->addLayout(clockColumn);
+    auto* clockCard = new QFrame();
+    clockCard->setObjectName("clockCard");
 
-    auto* statusColumn = new QVBoxLayout();
-    statusColumn->addWidget(new QLabel("Battery 82% — not charging"));
-    statusColumn->addWidget(new QLabel("Wi-Fi connected: Home Wi-Fi"));
-    statusRow->addLayout(statusColumn);
+    auto* clockLayout = new QVBoxLayout(clockCard);
+    clockLayout->setContentsMargins(10, 8, 10, 8);
 
-    overviewLayout->addLayout(statusRow);
+    auto* time = new QLabel("11:37");
+    time->setObjectName("timeLabel");
 
-    auto* deviceRow = new QHBoxLayout();
-    deviceRow->addWidget(new QLabel("Raspberry Pi"));
+    auto* date = new QLabel("Tue, Oct 28");
+    date->setObjectName("dateLabel");
+
+    clockLayout->addStretch();
+    clockLayout->addWidget(time);
+    clockLayout->addWidget(date);
+    clockLayout->addStretch();
+
+    statusRow->addWidget(clockCard, 3);
+
+    auto* statusCards = new QVBoxLayout();
+    statusCards->setSpacing(8);
+
+    auto* batteryCard = new QFrame();
+    batteryCard->setObjectName("batteryCard");
+
+    auto* batteryLayout = new QVBoxLayout(batteryCard);
+    batteryLayout->setContentsMargins(10, 6, 10, 6);
+
+    auto* battery = new QLabel("Battery 82%");
+    battery->setObjectName("cardTitle");
+
+    auto* charging = new QLabel("Not charging");
+    charging->setObjectName("smallText");
+
+    batteryLayout->addWidget(battery);
+    batteryLayout->addWidget(charging);
+
+    auto* wifiCard = new QFrame();
+    wifiCard->setObjectName("wifiCard");
+
+    auto* wifiLayout = new QVBoxLayout(wifiCard);
+    wifiLayout->setContentsMargins(10, 6, 10, 6);
+
+    auto* wifi = new QLabel("Wi-Fi connected");
+    wifi->setObjectName("cardTitle");
+
+    auto* network = new QLabel("Home Wi-Fi");
+    network->setObjectName("smallText");
+
+    wifiLayout->addWidget(wifi);
+    wifiLayout->addWidget(network);
+
+    statusCards->addWidget(batteryCard);
+    statusCards->addWidget(wifiCard);
+    statusRow->addLayout(statusCards, 2);
+
+    overviewLayout->addLayout(statusRow, 3);
+
+    // Device information card
+    auto* deviceCard = new QFrame();
+    deviceCard->setObjectName("deviceCard");
+
+    auto* deviceRow = new QHBoxLayout(deviceCard);
+    deviceRow->setContentsMargins(10, 6, 10, 6);
+
+    auto* deviceBadge = new QLabel("Pi");
+    deviceBadge->setObjectName("deviceBadge");
+    deviceBadge->setAlignment(Qt::AlignCenter);
 
     auto* deviceInfo = new QVBoxLayout();
-    deviceInfo->addWidget(new QLabel("Raspberry Pi Zero 2 W"));
-    deviceInfo->addWidget(new QLabel("IP 192.168.1.42"));
-    deviceInfo->addWidget(new QLabel("Storage 64%"));
+
+    auto* deviceName = new QLabel("Raspberry Pi Zero 2 W");
+    deviceName->setObjectName("cardTitle");
+
+    auto* ipAddress = new QLabel("IP 192.168.1.42");
+    ipAddress->setObjectName("smallText");
+
+    auto* storage = new QLabel("Storage 64%");
+    storage->setObjectName("smallText");
+
+    deviceInfo->addWidget(deviceName);
+    deviceInfo->addWidget(ipAddress);
+    deviceInfo->addWidget(storage);
+
+    deviceRow->addWidget(deviceBadge);
     deviceRow->addLayout(deviceInfo);
+    deviceRow->addStretch();
 
-    overviewLayout->addLayout(deviceRow);
-    overviewLayout->addStretch();
+    overviewLayout->addWidget(deviceCard, 2);
 
+    // Overview buttons
     auto* overviewButtons = new QHBoxLayout();
+    overviewButtons->setSpacing(8);
+
     auto* btnHome = new QPushButton("Home");
-    auto* btnShutdown = new QPushButton("Shutdown");
+    btnHome->setObjectName("btnHome");
+
+    auto* btnShutdown = new QPushButton("Shut down");
+    btnShutdown->setObjectName("btnShutdown");
+
     auto* btnSettings = new QPushButton("Settings");
+    btnSettings->setObjectName("btnSettings");
 
     overviewButtons->addWidget(btnHome);
     overviewButtons->addWidget(btnShutdown);
     overviewButtons->addWidget(btnSettings);
+
     overviewLayout->addLayout(overviewButtons);
 
-    // -------- Settings page --------
+    // ======================== SETTINGS PAGE ========================
+
     auto* settingsLayout = new QVBoxLayout(settingsPage);
+    settingsLayout->setContentsMargins(12, 10, 12, 10);
+    settingsLayout->setSpacing(10);
 
-    auto* settingsHeader = new QHBoxLayout();
-    settingsHeader->addWidget(new QLabel("miniSystem Settings"));
+    // Settings app header
+    auto* settingsAppHeader = new QFrame();
+    settingsAppHeader->setObjectName("appHeader");
+
+    auto* settingsHeader = new QHBoxLayout(settingsAppHeader);
+    settingsHeader->setContentsMargins(10, 4, 10, 4);
+
+    auto* settingsTitle = new QLabel("miniSystem");
+    settingsTitle->setObjectName("settingsTitle");
+
+    auto* settingsFish = new QLabel("🐟");
+    settingsFish->setObjectName("fishIcon");
+
+    settingsHeader->addWidget(settingsTitle);
     settingsHeader->addStretch();
+    settingsHeader->addWidget(settingsFish);
 
-    auto* btnBack = new QPushButton("Back");
-    settingsHeader->addWidget(btnBack);
-    settingsLayout->addLayout(settingsHeader);
+    settingsLayout->addWidget(settingsAppHeader);
 
-    settingsLayout->addWidget(new QLabel("Screen brightness"));
+    // Brightness card
+    auto* brightnessCard = new QFrame();
+    brightnessCard->setObjectName("settingsCard");
 
-    auto* brightnessRow = new QHBoxLayout();
+    auto* brightnessLayout = new QVBoxLayout(brightnessCard);
+    brightnessLayout->setContentsMargins(12, 8, 12, 8);
+
+    auto* brightnessHeader = new QHBoxLayout();
+
+    auto* brightnessLabel = new QLabel("Screen brightness");
+    brightnessLabel->setObjectName("cardTitle");
+
+    auto* brightnessValue = new QLabel("70%");
+    brightnessValue->setObjectName("cardTitle");
+
+    brightnessHeader->addWidget(brightnessLabel);
+    brightnessHeader->addStretch();
+    brightnessHeader->addWidget(brightnessValue);
+
     auto* brightnessSlider = new QSlider(Qt::Horizontal);
     brightnessSlider->setRange(0, 100);
     brightnessSlider->setValue(70);
 
-    auto* brightnessValue = new QLabel("70%");
-    brightnessRow->addWidget(brightnessSlider);
-    brightnessRow->addWidget(brightnessValue);
-    settingsLayout->addLayout(brightnessRow);
+    brightnessLayout->addLayout(brightnessHeader);
+    brightnessLayout->addWidget(brightnessSlider);
 
-    auto* bluetoothToggle = new QCheckBox("Bluetooth on");
+    settingsLayout->addWidget(brightnessCard);
+
+    // Bluetooth card
+    auto* bluetoothCard = new QFrame();
+    bluetoothCard->setObjectName("settingsCard");
+
+    auto* bluetoothLayout = new QHBoxLayout(bluetoothCard);
+    bluetoothLayout->setContentsMargins(12, 8, 12, 8);
+
+    auto* bluetoothText = new QLabel("Bluetooth");
+    bluetoothText->setObjectName("cardTitle");
+
+    auto* bluetoothToggle = new QCheckBox("On");
+    bluetoothToggle->setObjectName("bluetoothToggle");
     bluetoothToggle->setChecked(true);
-    settingsLayout->addWidget(bluetoothToggle);
+
+    bluetoothLayout->addWidget(bluetoothText);
+    bluetoothLayout->addStretch();
+    bluetoothLayout->addWidget(bluetoothToggle);
+
+    settingsLayout->addWidget(bluetoothCard);
     settingsLayout->addStretch();
 
-    // Update the number next to the slider as it moves.
-    connect(brightnessSlider, &QSlider::valueChanged,
-            this, [brightnessValue](int value) {
-        brightnessValue->setText(QString("%1%").arg(value));
-    });
+    // Return to the Overview page.
+    auto* btnBack = new QPushButton("Home");
+    btnBack->setObjectName("btnHome");
+    settingsLayout->addWidget(btnBack);
 
-    // Switch between the two pages.
+    // Page navigation
     connect(btnSettings, &QPushButton::clicked,
             this, [this]() {
         pageStack->setCurrentWidget(settingsPage);
@@ -114,5 +258,11 @@ systemWindow::systemWindow(QWidget* parent): QWidget(parent)
     connect(btnBack, &QPushButton::clicked,
             this, [this]() {
         pageStack->setCurrentWidget(overviewPage);
+    });
+
+    // Update the percentage as the brightness slider moves.
+    connect(brightnessSlider, &QSlider::valueChanged,
+            this, [brightnessValue](int value) {
+        brightnessValue->setText(QString("%1%").arg(value));
     });
 }

@@ -1,0 +1,153 @@
+QWidget#overviewPage,
+QWidget#settingsPage {
+    background-color: #FFF2DE;
+    color: #493D73;
+    font-family: "Trebuchet MS";
+    font-size: 14px;
+    border: 2px solid #9B88C8;
+    border-radius: 14px;
+}
+
+QLabel {
+    background-color: transparent;
+    color: #493D73;
+    border: none;
+}
+
+QLabel#pageTitle {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+QLabel#settingsTitle {
+    font-family: "Courier New";
+    font-size: 25px;
+    font-weight: bold;
+}
+
+QLabel#timeLabel {
+    font-family: "Courier New";
+    font-size: 34px;
+    font-weight: bold;
+}
+
+QLabel#dateLabel {
+    font-size: 15px;
+}
+
+QLabel#cardTitle {
+    font-weight: bold;
+}
+
+QLabel#smallText {
+    font-size: 12px;
+}
+
+QLabel#fishIcon {
+    font-size: 20px;
+}
+
+QLabel#deviceBadge {
+    min-width: 38px;
+    max-width: 38px;
+    min-height: 38px;
+    max-height: 38px;
+    background-color: #F7A0AD;
+    border: 2px solid #8F7CBD;
+    border-radius: 19px;
+    font-weight: bold;
+}
+
+QFrame#clockCard {
+    min-height: 100px;
+    background-color: #FFF0BD;
+    border: 2px solid #9B88C8;
+    border-radius: 12px;
+}
+
+QFrame#batteryCard {
+    background-color: #FFDCCB;
+    border: 2px solid #F3A99C;
+    border-radius: 12px;
+}
+
+QFrame#wifiCard {
+    background-color: #D2F1EB;
+    border: 2px solid #81CFC4;
+    border-radius: 12px;
+}
+
+QFrame#deviceCard,
+QFrame#settingsCard {
+    background-color: #FFF8EF;
+    border: 2px solid #B4A3D9;
+    border-radius: 12px;
+}
+
+QPushButton {
+    min-height: 32px;
+    padding: 4px 10px;
+    color: #493D73;
+    background-color: #D9CEF5;
+    border: 2px solid #8F7CBD;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+QPushButton#btnShutdown {
+    color: white;
+    background-color: #F47D87;
+    border-color: #B95768;
+}
+
+QPushButton#btnSettings {
+    background-color: #FFE49A;
+}
+
+QPushButton:hover {
+    border-color: #493D73;
+}
+
+QSlider::groove:horizontal {
+    height: 12px;
+    background-color: #D7CFF0;
+    border-radius: 6px;
+}
+
+QSlider::sub-page:horizontal {
+    background-color: #35CDB8;
+    border-radius: 6px;
+}
+
+QSlider::handle:horizontal {
+    width: 20px;
+    margin: -5px 0;
+    background-color: #FFE49A;
+    border: 2px solid #493D73;
+    border-radius: 11px;
+}
+
+QCheckBox {
+    spacing: 8px;
+    color: #493D73;
+    font-weight: bold;
+}
+
+QCheckBox::indicator {
+    width: 46px;
+    height: 26px;
+    background-color: #D9CEF5;
+    border: 2px solid #8F7CBD;
+    border-radius: 13px;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #35CDB8;
+    border-color: #287F79;
+}
+
+QFrame#appHeader {
+    background-color: #D9CEF5;
+    border: 2px solid #9B88C8;
+    border-radius: 12px;
+}
