@@ -8,6 +8,7 @@
 #include <QSlider>
 #include <QStackedWidget>
 #include <QVBoxLayout>
+#include <QDateTime>
 
 systemWindow::systemWindow(QWidget* parent)
     : QWidget(parent)
@@ -67,16 +68,22 @@ systemWindow::systemWindow(QWidget* parent)
     auto* clockLayout = new QVBoxLayout(clockCard);
     clockLayout->setContentsMargins(10, 8, 10, 8);
 
-    auto* time = new QLabel("11:37");
-    time->setObjectName("timeLabel");
+    // auto* time = new QLabel("11:37");
+    // time->setObjectName("timeLabel");
+    timeLabel = new QLabel();
+    timeLabel->setObjectName("timeLabel");
 
-    auto* date = new QLabel("Tue, Oct 28");
-    date->setObjectName("dateLabel");
+    // auto* date = new QLabel("Tue, Oct 28");
+    // date->setObjectName("dateLabel");
+    dateLabel = new QLabel();
+    dateLabel->setObjectName("dateLabel");
 
     clockLayout->addStretch();
-    clockLayout->addWidget(time);
-    clockLayout->addWidget(date);
+    clockLayout->addWidget(timeLabel);
+    clockLayout->addWidget(dateLabel);
     clockLayout->addStretch();
+
+    clockTimer = new QTimer(this);
 
     statusRow->addWidget(clockCard, 3);
 
@@ -244,6 +251,18 @@ systemWindow::systemWindow(QWidget* parent)
     settingsLayout->addWidget(bluetoothCard);
     settingsLayout->addStretch();
 
+    connect(
+        clockTimer, 
+        &QTimer::timeout,
+        this,
+        [this](){
+            updateClock();
+        }
+    );
+
+    updateClock();
+    clockTimer->start(1000); //refreshes ever 1000 mmilliseconds
+
     // Return to the Overview page.
     auto* btnBack = new QPushButton("Home");
     btnBack->setObjectName("btnHome");
@@ -265,4 +284,11 @@ systemWindow::systemWindow(QWidget* parent)
             this, [brightnessValue](int value) {
         brightnessValue->setText(QString("%1%").arg(value));
     });
+}
+
+void systemWindow::updateClock(){
+    const QDateTime now = QDateTime::currentDateTime();
+
+    timeLabel->setText(now.toString("h:mm AP"));
+    dateLabel->setText(now.toString("ddd, MMM d"));
 }

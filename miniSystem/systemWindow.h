@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QWidget>
+#include <QLabel>
+#include <QTimer>
 
 class QStackedWidget;
 
@@ -13,4 +15,10 @@ private:
     QStackedWidget* pageStack;
     QWidget* overviewPage;
     QWidget* settingsPage;
+
+    QLabel* timeLabel;
+    QLabel* dateLabel;
+    QTimer* clockTimer;
+
+    void updateClock();
 };
