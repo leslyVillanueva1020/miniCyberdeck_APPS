@@ -1,32 +1,24 @@
+#pragma once
+
 #include <QWidget>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QLabel>
-#include <QPushButton>
+#include <QTimer>
 
-class systemWindow: public QWidget
+class QStackedWidget;
+
+class systemWindow : public QWidget
 {
-    private:
-        QVBoxLayout* mainLayout;
+public:
+    explicit systemWindow(QWidget* parent = nullptr);
 
-        QHBoxLayout* titleRow;
-        QLabel* title;
+private:
+    QStackedWidget* pageStack;
+    QWidget* overviewPage;
+    QWidget* settingsPage;
 
-        QVBoxLayout* midSection;
+    QLabel* timeLabel;
+    QLabel* dateLabel;
+    QTimer* clockTimer;
 
-        QHBoxLayout* topMidSection;
-        QVBoxLayout* rightSide;
-        QVBoxLayout* leftSide;
-
-        QHBoxLayout* bottomMidSection;
-        QVBoxLayout* infoSection;
-
-        QHBoxLayout* bottomRow;
-        QPushButton* btnHome;
-        QPushButton* btnShutdown;
-        QPushButton* btnSettings;
-
-    public:
-        systemWindow(QWidget* parent = nullptr);
-
+    void updateClock();
 };

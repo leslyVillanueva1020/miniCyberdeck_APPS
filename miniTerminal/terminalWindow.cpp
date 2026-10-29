@@ -12,9 +12,10 @@
 #include <QTextCharFormat>
 #include <QProcessEnvironment>
 
-terminalWindow::terminalWindow(QWidget* parent)
-    : QWidget(parent)
+terminalWindow::terminalWindow(QWidget* parent): QWidget(parent)
 {
+    resize(480, 320);
+
     setObjectName("terminalWindow");
     mainLayout = new QVBoxLayout(this);
 
