@@ -9,6 +9,9 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QDateTime>
+#include <QMessageBox>
+#include <QProcess>
+#include <QDebug>
 
 systemWindow::systemWindow(QWidget* parent)
     : QWidget(parent)
@@ -267,6 +270,43 @@ systemWindow::systemWindow(QWidget* parent)
     auto* btnBack = new QPushButton("Home");
     btnBack->setObjectName("btnHome");
     settingsLayout->addWidget(btnBack);
+
+    connect(btnShutdown, &QPushButton::clicked,
+            this, [this](){
+                QMessageBox box(this);
+                box.setWindowTitle("Shutdown");
+                box.setText("Do you want to shutdown raspberry pi?");
+
+                QPushButton* shutdownNow = box.addButton("Shutdown", QMessageBox::DestructiveRole);
+                QPushButton* cancelShutdown = box.addButton("Cancel", QMessageBox::RejectRole);
+
+                box.setDefaultButton(cancelShutdown);
+                box.exec();
+
+                if(box.clickedButton() == shutdownNow){
+                    qDebug()<< "Shutdown button is chosen";
+
+                    auto* process = new QProcess(this);
+
+                    connect(process, &QProcess::finished,
+                            this, [process](int exitCode, QProcess::ExitStatus status) {
+                                qDebug() << "Exit code:" << exitCode;
+                                qDebug() << "Error output:" << process->readAllStandardError();
+                    });
+
+                    connect(process, &QProcess::errorOccurred,
+                        this, [process](QProcess::ProcessError error) {
+                        if (error == QProcess::FailedToStart) {
+                                qDebug() << "Could not start the program:"
+                                        << process->errorString();
+                            }
+                    });
+
+                    process->start("systemctl", {"poweroff"});
+                }
+            }
+    );
+
 
     // Page navigation
     connect(btnSettings, &QPushButton::clicked,
