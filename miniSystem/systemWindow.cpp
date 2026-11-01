@@ -13,6 +13,8 @@
 #include <QProcess>
 #include <QDebug>
 #include <QStorageInfo>
+#include <QNetworkInterface>
+#include <QAbstractSocket>
 
 systemWindow::systemWindow(QWidget* parent)
     : QWidget(parent)
@@ -150,7 +152,7 @@ systemWindow::systemWindow(QWidget* parent)
     auto* deviceName = new QLabel("Raspberry Pi Zero 2 W");
     deviceName->setObjectName("cardTitle");
 
-    auto* ipAddress = new QLabel("IP 192.168.1.42");
+    auto* ipAddress = new QLabel("IP 192.168.4.161 ???");
     ipAddress->setObjectName("smallText");
 
     auto* storage = new QLabel("Now Loading...");
@@ -260,8 +262,7 @@ systemWindow::systemWindow(QWidget* parent)
     settingsLayout->addStretch();
 
     if(root.isValid() && root.isReady()){
-        qDebug() << "Total bytes: " <<root.bytesTotal()
-                << "Free bytes: " << root.bytesFree();
+        // qDebug() << "Total bytes: " <<root.bytesTotal() << "Free bytes: " << root.bytesFree();
         
         totalBytes = root.bytesTotal();
         freeBytes = root.bytesFree();
@@ -271,6 +272,19 @@ systemWindow::systemWindow(QWidget* parent)
         qDebug() << usedPercent;
 
         storage->setText(QString("Storage Used: %1%").arg(static_cast<int>(usedPercent)));
+    }
+
+    for(const QNetworkInterface &interface : QNetworkInterface::allInterfaces()){
+        // qDebug() << "Interface:" << interface.name();
+
+        for(const QNetworkAddressEntry &entry : interface.addressEntries()){
+            // qDebug() << "  IP:" << entry.ip().toString();
+
+            if(interface.name() == "wlan0" && entry.ip().protocol() == QAbstractSocket::IPv4Protocol){
+                // qDebug() << "  IP:" << entry.ip().toString();
+                ipAddress->setText(QString("IP %1").arg(entry.ip().toString()));
+            }
+        }
     }
 
     connect(

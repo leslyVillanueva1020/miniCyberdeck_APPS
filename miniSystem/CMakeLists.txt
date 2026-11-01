@@ -4,7 +4,7 @@ project(miniSystem)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Network)
 
 add_executable(
     miniSystem
@@ -17,4 +17,5 @@ target_link_libraries(
     miniSystem
     PRIVATE
     Qt6::Widgets
+    Qt6::Network
 )
