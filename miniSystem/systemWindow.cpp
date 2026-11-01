@@ -12,12 +12,17 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QDebug>
+#include <QStorageInfo>
 
 systemWindow::systemWindow(QWidget* parent)
     : QWidget(parent)
 {
     setWindowTitle("miniSystem");
     resize(480, 320);
+
+    const QStorageInfo root = QStorageInfo::root();
+    qint64 totalBytes = 0;
+    qint64 freeBytes = 0;
 
     // The main window displays one page from the stack at a time.
     auto* windowLayout = new QVBoxLayout(this);
@@ -148,7 +153,7 @@ systemWindow::systemWindow(QWidget* parent)
     auto* ipAddress = new QLabel("IP 192.168.1.42");
     ipAddress->setObjectName("smallText");
 
-    auto* storage = new QLabel("Storage 64%");
+    auto* storage = new QLabel("Now Loading...");
     storage->setObjectName("smallText");
 
     deviceInfo->addWidget(deviceName);
@@ -253,6 +258,20 @@ systemWindow::systemWindow(QWidget* parent)
 
     settingsLayout->addWidget(bluetoothCard);
     settingsLayout->addStretch();
+
+    if(root.isValid() && root.isReady()){
+        qDebug() << "Total bytes: " <<root.bytesTotal()
+                << "Free bytes: " << root.bytesFree();
+        
+        totalBytes = root.bytesTotal();
+        freeBytes = root.bytesFree();
+
+        double usedPercent = static_cast<double>(totalBytes - freeBytes) / totalBytes * 100.0;
+
+        qDebug() << usedPercent;
+
+        storage->setText(QString("Storage Used: %1%").arg(static_cast<int>(usedPercent)));
+    }
 
     connect(
         clockTimer, 
