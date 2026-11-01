@@ -106,10 +106,10 @@ systemWindow::systemWindow(QWidget* parent)
     auto* batteryLayout = new QVBoxLayout(batteryCard);
     batteryLayout->setContentsMargins(10, 6, 10, 6);
 
-    auto* battery = new QLabel("Battery 82%");
+    auto* battery = new QLabel("Battery ???%");
     battery->setObjectName("cardTitle");
 
-    auto* charging = new QLabel("Not charging");
+    auto* charging = new QLabel("Charging Status: Unknown");
     charging->setObjectName("smallText");
 
     batteryLayout->addWidget(battery);
