@@ -12,12 +12,19 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QDebug>
+#include <QStorageInfo>
+#include <QNetworkInterface>
+#include <QAbstractSocket>
 
 systemWindow::systemWindow(QWidget* parent)
     : QWidget(parent)
 {
     setWindowTitle("miniSystem");
     resize(480, 320);
+
+    const QStorageInfo root = QStorageInfo::root();
+    qint64 totalBytes = 0;
+    qint64 freeBytes = 0;
 
     // The main window displays one page from the stack at a time.
     auto* windowLayout = new QVBoxLayout(this);
@@ -99,10 +106,10 @@ systemWindow::systemWindow(QWidget* parent)
     auto* batteryLayout = new QVBoxLayout(batteryCard);
     batteryLayout->setContentsMargins(10, 6, 10, 6);
 
-    auto* battery = new QLabel("Battery 82%");
+    auto* battery = new QLabel("Battery ???%");
     battery->setObjectName("cardTitle");
 
-    auto* charging = new QLabel("Not charging");
+    auto* charging = new QLabel("Charging Status: Unknown");
     charging->setObjectName("smallText");
 
     batteryLayout->addWidget(battery);
@@ -145,10 +152,10 @@ systemWindow::systemWindow(QWidget* parent)
     auto* deviceName = new QLabel("Raspberry Pi Zero 2 W");
     deviceName->setObjectName("cardTitle");
 
-    auto* ipAddress = new QLabel("IP 192.168.1.42");
+    auto* ipAddress = new QLabel("IP 192.168.4.161 ???");
     ipAddress->setObjectName("smallText");
 
-    auto* storage = new QLabel("Storage 64%");
+    auto* storage = new QLabel("Now Loading...");
     storage->setObjectName("smallText");
 
     deviceInfo->addWidget(deviceName);
@@ -253,6 +260,32 @@ systemWindow::systemWindow(QWidget* parent)
 
     settingsLayout->addWidget(bluetoothCard);
     settingsLayout->addStretch();
+
+    if(root.isValid() && root.isReady()){
+        // qDebug() << "Total bytes: " <<root.bytesTotal() << "Free bytes: " << root.bytesFree();
+        
+        totalBytes = root.bytesTotal();
+        freeBytes = root.bytesFree();
+
+        double usedPercent = static_cast<double>(totalBytes - freeBytes) / totalBytes * 100.0;
+
+        qDebug() << usedPercent;
+
+        storage->setText(QString("Storage Used: %1%").arg(static_cast<int>(usedPercent)));
+    }
+
+    for(const QNetworkInterface &interface : QNetworkInterface::allInterfaces()){
+        // qDebug() << "Interface:" << interface.name();
+
+        for(const QNetworkAddressEntry &entry : interface.addressEntries()){
+            // qDebug() << "  IP:" << entry.ip().toString();
+
+            if(interface.name() == "wlan0" && entry.ip().protocol() == QAbstractSocket::IPv4Protocol){
+                // qDebug() << "  IP:" << entry.ip().toString();
+                ipAddress->setText(QString("IP %1").arg(entry.ip().toString()));
+            }
+        }
+    }
 
     connect(
         clockTimer, 
