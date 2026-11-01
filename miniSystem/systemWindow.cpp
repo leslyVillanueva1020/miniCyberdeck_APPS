@@ -121,7 +121,7 @@ systemWindow::systemWindow(QWidget* parent)
     auto* wifiLayout = new QVBoxLayout(wifiCard);
     wifiLayout->setContentsMargins(10, 6, 10, 6);
 
-    auto* wifi = new QLabel("Wi-Fi connected");
+    auto* wifi = new QLabel("Wi-Fi: unknown");
     wifi->setObjectName("cardTitle");
 
     auto* network = new QLabel("Home Wi-Fi");
@@ -152,7 +152,7 @@ systemWindow::systemWindow(QWidget* parent)
     auto* deviceName = new QLabel("Raspberry Pi Zero 2 W");
     deviceName->setObjectName("cardTitle");
 
-    auto* ipAddress = new QLabel("IP 192.168.4.161 ???");
+    auto* ipAddress = new QLabel("IP ???");
     ipAddress->setObjectName("smallText");
 
     auto* storage = new QLabel("Now Loading...");
@@ -274,6 +274,8 @@ systemWindow::systemWindow(QWidget* parent)
         storage->setText(QString("Storage Used: %1%").arg(static_cast<int>(usedPercent)));
     }
 
+    bool found = false;
+
     for(const QNetworkInterface &interface : QNetworkInterface::allInterfaces()){
         // qDebug() << "Interface:" << interface.name();
 
@@ -283,8 +285,17 @@ systemWindow::systemWindow(QWidget* parent)
             if(interface.name() == "wlan0" && entry.ip().protocol() == QAbstractSocket::IPv4Protocol){
                 // qDebug() << "  IP:" << entry.ip().toString();
                 ipAddress->setText(QString("IP %1").arg(entry.ip().toString()));
+
+                found = true;
             }
+
         }
+    }
+
+    if(found){
+        wifi->setText("Wifi: connected");
+    } else {
+        wifi->setText("Wifi: disconnected");
     }
 
     connect(
