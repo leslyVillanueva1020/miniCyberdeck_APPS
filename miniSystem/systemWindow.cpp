@@ -124,7 +124,7 @@ systemWindow::systemWindow(QWidget* parent)
     auto* wifi = new QLabel("Wi-Fi: unknown");
     wifi->setObjectName("cardTitle");
 
-    auto* network = new QLabel("Home Wi-Fi");
+    auto* network = new QLabel("Unknown Wi-Fi");
     network->setObjectName("smallText");
 
     wifiLayout->addWidget(wifi);
@@ -298,6 +298,23 @@ systemWindow::systemWindow(QWidget* parent)
         wifi->setText("Wifi: disconnected");
     }
 
+    auto* process = new QProcess(this);
+    connect(process, &QProcess::finished, this, [process, network]() {
+        const QByteArray output = process->readAllStandardOutput();
+        const QString wifiOutput = QString::fromUtf8(output);
+        const QStringList lines = wifiOutput.split('\n');
+
+        for (const QString& line : lines) {
+            if (line.startsWith("*:")) {
+                const QString wifiName = line.sliced(2);
+                network->setText(wifiName + " Wi-Fi");
+                break;
+            }
+        }
+    });
+
+    process->start("nmcli", {"-g", "IN-USE,SSID", "device", "wifi", "list"});
+
     connect(
         clockTimer, 
         &QTimer::timeout,
@@ -328,7 +345,7 @@ systemWindow::systemWindow(QWidget* parent)
                 box.exec();
 
                 if(box.clickedButton() == shutdownNow){
-                    qDebug()<< "Shutdown button is chosen";
+                    // qDebug()<< "Shutdown button is chosen";
 
                     auto* process = new QProcess(this);
 
