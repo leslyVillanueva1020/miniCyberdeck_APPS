@@ -15,6 +15,7 @@
 #include <QStorageInfo>
 #include <QNetworkInterface>
 #include <QAbstractSocket>
+#include <QLocalSocket>
 
 systemWindow::systemWindow(QWidget* parent)
     : QWidget(parent)
@@ -261,6 +262,8 @@ systemWindow::systemWindow(QWidget* parent)
     settingsLayout->addWidget(bluetoothCard);
     settingsLayout->addStretch();
 
+    //STORAGE INFO 
+
     if(root.isValid() && root.isReady()){
         // qDebug() << "Total bytes: " <<root.bytesTotal() << "Free bytes: " << root.bytesFree();
         
@@ -274,8 +277,9 @@ systemWindow::systemWindow(QWidget* parent)
         storage->setText(QString("Storage Used: %1%").arg(static_cast<int>(usedPercent)));
     }
 
-    bool found = false;
 
+    //NETWORK INFO
+    bool found = false;
     for(const QNetworkInterface &interface : QNetworkInterface::allInterfaces()){
         // qDebug() << "Interface:" << interface.name();
 
@@ -315,6 +319,59 @@ systemWindow::systemWindow(QWidget* parent)
 
     process->start("nmcli", {"-g", "IN-USE,SSID", "device", "wifi", "list"});
 
+    //BATTERY INFO 
+    auto* socket = new QLocalSocket(this);
+
+    connect(socket, &QLocalSocket::connected, this, [socket](){
+        //connection succeeded. send command now
+        socket->write("get battery\n");
+        socket->write("get battery_power_plugged\n");
+        socket->write("get battery_allow_charging\n");
+    });
+
+    connect(socket, &QLocalSocket::readyRead, this,
+            [this, socket, battery, charging]() {
+        // Process each complete newline-ended reply.
+        while (socket->canReadLine()) {
+            const QString line =
+                QString::fromUtf8(socket->readLine()).trimmed();
+
+            qDebug() << line;
+
+            if (line.startsWith("battery:")) {
+                const QString numberText = line.section(':', 1).trimmed();
+
+                bool ok = false;
+                const double value = numberText.toDouble(&ok);
+
+                if (ok) {
+                    battery->setText(
+                        QString("Battery %1%").arg(value, 0, 'f', 0));
+                }
+            } else if (line.startsWith("battery_power_plugged:")) {
+                const QString valueText = line.section(':', 1).trimmed();
+                powerPlugged = (valueText == "true");
+                gotPowerPlugged = true;
+            } else if (line.startsWith("battery_allow_charging:")) {
+                const QString valueText = line.section(':', 1).trimmed();
+                chargingAllowed = (valueText == "true");
+                gotChargingAllowed = true;
+            }
+
+            // Wait until both charging replies have arrived.
+            if (gotPowerPlugged && gotChargingAllowed) {
+                if (powerPlugged && chargingAllowed) {
+                    charging->setText("Charging status: Charging");
+                } else {
+                    charging->setText("Charging status: Not charging");
+                }
+            }
+        }
+    });
+
+    socket->connectToServer("/tmp/pisugar-server.sock");
+
+    //TIMER AND DATE
     connect(
         clockTimer, 
         &QTimer::timeout,
