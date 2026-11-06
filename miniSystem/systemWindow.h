@@ -20,5 +20,10 @@ private:
     QLabel* dateLabel;
     QTimer* clockTimer;
 
+    bool powerPlugged = false;
+    bool chargingAllowed = false;
+    bool gotPowerPlugged = false;
+    bool gotChargingAllowed = false;
+
     void updateClock();
 };
