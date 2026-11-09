@@ -253,7 +253,7 @@ systemWindow::systemWindow(QWidget* parent)
 
     auto* bluetoothToggle = new QCheckBox("On");
     bluetoothToggle->setObjectName("bluetoothToggle");
-    bluetoothToggle->setChecked(true);
+    // bluetoothToggle->setChecked(true);
 
     bluetoothLayout->addWidget(bluetoothText);
     bluetoothLayout->addStretch();
@@ -263,7 +263,6 @@ systemWindow::systemWindow(QWidget* parent)
     settingsLayout->addStretch();
 
     //STORAGE INFO 
-
     if(root.isValid() && root.isReady()){
         // qDebug() << "Total bytes: " <<root.bytesTotal() << "Free bytes: " << root.bytesFree();
         
@@ -272,11 +271,42 @@ systemWindow::systemWindow(QWidget* parent)
 
         double usedPercent = static_cast<double>(totalBytes - freeBytes) / totalBytes * 100.0;
 
-        qDebug() << usedPercent;
+        // qDebug() << usedPercent;
 
         storage->setText(QString("Storage Used: %1%").arg(static_cast<int>(usedPercent)));
     }
 
+    //BLUETOOTH INFO
+    // Check the Pi's Bluetooth power state.
+    auto* statusProcess = new QProcess(this);
+
+    connect(statusProcess, &QProcess::finished,
+            this, [statusProcess, bluetoothToggle]() {
+        const QByteArray output = statusProcess->readAllStandardOutput();
+        const QString status = QString::fromUtf8(output);
+
+        const bool isPowered = status.contains("Powered: yes");
+        bluetoothToggle->setChecked(isPowered);
+    });
+
+    // Run the first status check when the app opens.
+    statusProcess->start("bluetoothctl", {"show"});
+
+    // When the user clicks the checkbox, ask Bluetooth to change state.
+    connect(bluetoothToggle, &QCheckBox::clicked,
+            this, [this, statusProcess](bool checked) {
+        auto* powerProcess = new QProcess(this);
+
+        // After the power command finishes, check Bluetooth's actual state again.
+        connect(powerProcess, &QProcess::finished,
+                this, [statusProcess, powerProcess]() {
+            statusProcess->start("bluetoothctl", {"show"});
+            powerProcess->deleteLater();
+        });
+
+        const QString action = checked ? "on" : "off";
+        powerProcess->start("bluetoothctl", {"power", action});
+    });
 
     //NETWORK INFO
     bool found = false;
