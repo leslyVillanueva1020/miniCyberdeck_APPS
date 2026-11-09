@@ -457,6 +457,8 @@ systemWindow::systemWindow(QWidget* parent)
 
 
     // Page navigation
+    connect(btnHome, &QPushButton::clicked, this, &QWidget::close);
+
     connect(btnSettings, &QPushButton::clicked,
             this, [this]() {
         pageStack->setCurrentWidget(settingsPage);

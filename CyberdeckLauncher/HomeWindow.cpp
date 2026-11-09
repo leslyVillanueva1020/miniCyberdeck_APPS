@@ -130,6 +130,13 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     );
 
     connect(
+        btnOpenSettings,
+        &QPushButton::clicked,
+        this,
+        &HomeWindow::openSystemApp
+    );
+
+    connect(
         terminalProcess,
         &QProcess::started,
         this,
@@ -207,6 +214,24 @@ void HomeWindow::openTerminalApp()
 
     QString terminalWorkingDirectory =
         "C:/Users/alexi/miniCyberdeck_APPS/miniTerminal";
+
+    terminalProcess->setWorkingDirectory(terminalWorkingDirectory);
+    terminalProcess->start(terminalProgram);
+}
+
+void HomeWindow::openSystemApp(){
+    if (terminalProcess->state() == QProcess::Running) {
+        qDebug() << "MiniSystem is already running.";
+        return;
+    }
+
+    qDebug() << "Open Settings App button clicked!";
+
+    QString terminalProgram =
+        "C:/Users/alexi/miniCyberdeck_APPS/miniSystem/build/miniSystem.exe";
+
+    QString terminalWorkingDirectory =
+        "C:/Users/alexi/miniCyberdeck_APPS/miniSystem";
 
     terminalProcess->setWorkingDirectory(terminalWorkingDirectory);
     terminalProcess->start(terminalProgram);

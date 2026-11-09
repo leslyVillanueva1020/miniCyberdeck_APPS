@@ -28,6 +28,7 @@ class HomeWindow: public QWidget{
 
         void openNotesApp();
         void openTerminalApp();
+        void openSystemApp();
 
     protected:
         bool eventFilter(QObject* watched, QEvent* event) override;
