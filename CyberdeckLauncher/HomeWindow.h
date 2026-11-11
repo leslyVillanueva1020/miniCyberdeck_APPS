@@ -22,6 +22,7 @@ class HomeWindow: public QWidget{
 
         QProcess* notesProcess;
         QProcess* terminalProcess;
+        QProcess* systemProcess;
  
         QPoint swipeStart; //where the mouse first touched
         bool trackingSwipe; //whether a swipe is currently in progress

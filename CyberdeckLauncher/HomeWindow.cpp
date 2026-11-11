@@ -9,7 +9,7 @@
 #include <QtGlobal>
 
 HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
-    resize(480,320);
+    setFixedSize(480, 320);
     pageStack = new QStackedWidget(this);
 
     page1 = new QWidget();
@@ -29,13 +29,20 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     pageStack->installEventFilter(this);
 
     mainLayout = new QVBoxLayout(this);
+    //12 pixels on left, 8 on top, 12 on right, 8 on bottom
+    mainLayout->setContentsMargins(12,8,12,8);
+    //4 pixels between main layouts children
+    mainLayout->setSpacing(4);
     notesProcess = new QProcess(this);
     terminalProcess = new QProcess(this);
+    systemProcess = new QProcess(this);
 
     trackingSwipe = false;
 
     // ================ HEADER =============================
     QHBoxLayout* header = new QHBoxLayout();
+    header->setContentsMargins(4, 0, 4, 0);
+    header->setSpacing(8);
     QLabel* appName = new QLabel("AQUARIUM LS");
     QLabel* time = new QLabel("10:34 AM");
     QLabel* battery = new QLabel("87%");
@@ -53,10 +60,18 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     gridApps1->addWidget(btnOpenMusic, 0, 1);
     gridApps1->addWidget(btnOpenBrowser, 1,0);
     gridApps1->addWidget(btnOpenSettings,1, 1);
+
+    gridApps1->setContentsMargins(8, 8, 8, 8);
+    gridApps1->setHorizontalSpacing(12);
+    gridApps1->setVerticalSpacing(12);
     
     // ======================= PAGE 2 =============================
     QPushButton* btnOpenTerminal = new QPushButton("Terminal");
     gridApps2->addWidget(btnOpenTerminal, 0, 0);
+
+    gridApps2->setContentsMargins(8, 8, 8, 8);
+    gridApps2->setHorizontalSpacing(12);
+    gridApps2->setVerticalSpacing(12);
 
 
     for(QWidget* widget: page1->findChildren<QWidget*>()){
@@ -80,6 +95,27 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     mainLayout->addLayout(header);
     mainLayout->addWidget(pageStack);
     mainLayout->addLayout(navigationLayout);
+
+    // set object names for styling
+    pageStack->setObjectName("pageStack");
+
+    page1->setObjectName("launcherPage");
+    page2->setObjectName("launcherPage");
+
+    appName->setObjectName("launcherTitle");
+    time->setObjectName("statusTime");
+    battery->setObjectName("statusBattery");
+
+    btnOpenNotes->setObjectName("appTile");
+    btnOpenMusic->setObjectName("appTile");
+    btnOpenBrowser->setObjectName("appTile");
+    btnOpenSettings->setObjectName("appTile");
+    btnOpenTerminal->setObjectName("appTile");
+
+    // align title and status labels
+    appName->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    time->setAlignment(Qt::AlignCenter);
+    battery->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     connect(btnNext, &QPushButton::clicked, this, [this](){
         int nextPage = pageStack->currentIndex() + 1;
@@ -123,10 +159,10 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     });
 
     connect(
-    btnOpenTerminal,
-    &QPushButton::clicked,
-    this,
-    &HomeWindow::openTerminalApp
+        btnOpenTerminal,
+        &QPushButton::clicked,
+        this,
+        &HomeWindow::openTerminalApp
     );
 
     connect(
@@ -134,6 +170,38 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
         &QPushButton::clicked,
         this,
         &HomeWindow::openSystemApp
+    );
+
+    connect(
+    systemProcess,
+    &QProcess::started,
+    this,
+    [this]() {
+        qDebug() << "MiniSystem started successfully!";
+        hide();
+    }
+);
+
+    connect(
+        systemProcess,
+        &QProcess::errorOccurred,
+        this,
+        [this](QProcess::ProcessError) {
+            qDebug() << "MiniSystem failed to start:"
+                    << systemProcess->errorString();
+        }
+    );
+
+    connect(
+        systemProcess,
+        &QProcess::finished,
+        this,
+        [this](int exitCode, QProcess::ExitStatus) {
+            qDebug() << "MiniSystem closed.";
+            qDebug() << "Exit code:" << exitCode;
+
+            show();
+        }
     );
 
     connect(
@@ -219,22 +287,23 @@ void HomeWindow::openTerminalApp()
     terminalProcess->start(terminalProgram);
 }
 
-void HomeWindow::openSystemApp(){
-    if (terminalProcess->state() == QProcess::Running) {
+void HomeWindow::openSystemApp()
+{
+    if (systemProcess->state() == QProcess::Running) {
         qDebug() << "MiniSystem is already running.";
         return;
     }
 
-    qDebug() << "Open Settings App button clicked!";
+    qDebug() << "Open MiniSystem button clicked!";
 
-    QString terminalProgram =
+    QString systemProgram =
         "C:/Users/alexi/miniCyberdeck_APPS/miniSystem/build/miniSystem.exe";
 
-    QString terminalWorkingDirectory =
+    QString systemWorkingDirectory =
         "C:/Users/alexi/miniCyberdeck_APPS/miniSystem";
 
-    terminalProcess->setWorkingDirectory(terminalWorkingDirectory);
-    terminalProcess->start(terminalProgram);
+    systemProcess->setWorkingDirectory(systemWorkingDirectory);
+    systemProcess->start(systemProgram);
 }
 
 bool HomeWindow::eventFilter(QObject* watched, QEvent* event){
