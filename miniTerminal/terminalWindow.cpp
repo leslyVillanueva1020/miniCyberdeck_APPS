@@ -14,7 +14,7 @@
 
 terminalWindow::terminalWindow(QWidget* parent): QWidget(parent)
 {
-    resize(480, 320);
+    setFixedSize(480, 320);
 
     setObjectName("terminalWindow");
     mainLayout = new QVBoxLayout(this);

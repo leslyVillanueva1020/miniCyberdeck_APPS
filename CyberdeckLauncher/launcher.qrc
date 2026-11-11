@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/fonts">
+        <file alias="PixelifySans-VariableFont_wght.ttf">fonts/PixelifySans-VariableFont_wght.ttf</file>
+    </qresource>
+</RCC>
