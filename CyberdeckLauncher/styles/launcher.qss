@@ -1,0 +1,63 @@
+QWidget {
+    font-family: "Pixelify Sans";
+}
+
+QLabel#launcherTitle {
+    color: #FFFDF4;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+QPushButton#appTile {
+    background-color: rgba(190, 245, 240, 180);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 210);
+    border-radius: 18px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+QPushButton#appTile:pressed {
+    background-color: rgba(130, 220, 215, 220);
+}
+
+QStackedWidget#pageStack {
+    background-color: #35C6C8;
+    border: none;
+}
+
+QStackedWidget#pageStack > QWidget#launcherPage1,
+QStackedWidget#pageStack > QWidget#launcherPage2 {
+    background-color: #35C6C8;
+    border: none;
+}
+
+QPushButton#appTile {
+    background-color: rgba(190, 245, 240, 180);
+    color: #FFFFFF;
+    border: 2px solid rgba(255, 255, 255, 220);
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 8px;
+}
+
+QPushButton#appTile:pressed {
+    background-color: rgba(130, 220, 215, 220);
+}
+
+QPushButton#navigationButton {
+    background-color: transparent;
+    color: #FFFDF4;
+    border: none;
+    font-size: 18px;
+}
+
+QPushButton#navigationButton:pressed {
+    color: #BDF5F0;
+}
+
+QLabel#pageIndicator {
+    color: #FFFDF4;
+    font-size: 16px;
+}

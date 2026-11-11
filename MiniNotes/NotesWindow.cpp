@@ -13,7 +13,7 @@
 NotesWindow:: NotesWindow(QWidget* parent) : QWidget(parent){                     
     // this means that id nobody gives me a parent use nullptr when declaration
 
-    resize(480, 320);
+    setFixedSize(480, 320);
 
     pageStack = new QStackedWidget();
 

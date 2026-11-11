@@ -21,7 +21,7 @@ systemWindow::systemWindow(QWidget* parent)
     : QWidget(parent)
 {
     setWindowTitle("miniSystem");
-    resize(480, 320);
+    setFixedSize(480, 320);
 
     const QStorageInfo root = QStorageInfo::root();
     qint64 totalBytes = 0;

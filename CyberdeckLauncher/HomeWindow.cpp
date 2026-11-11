@@ -98,9 +98,13 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
 
     // set object names for styling
     pageStack->setObjectName("pageStack");
+    pageStack->setAttribute(Qt::WA_StyledBackground, true);
 
-    page1->setObjectName("launcherPage");
-    page2->setObjectName("launcherPage");
+    page1->setObjectName("launcherPage1");
+    page2->setObjectName("launcherPage2");
+
+    page1->setAttribute(Qt::WA_StyledBackground, true);
+    page2->setAttribute(Qt::WA_StyledBackground, true);
 
     appName->setObjectName("launcherTitle");
     time->setObjectName("statusTime");
@@ -111,6 +115,10 @@ HomeWindow:: HomeWindow(QWidget* parent): QWidget(parent){
     btnOpenBrowser->setObjectName("appTile");
     btnOpenSettings->setObjectName("appTile");
     btnOpenTerminal->setObjectName("appTile");
+
+    pageIndicator->setObjectName("pageIndicator");
+    btnPrev->setObjectName("navigationButton");
+    btnNext->setObjectName("navigationButton");
 
     // align title and status labels
     appName->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
