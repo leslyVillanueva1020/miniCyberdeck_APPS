@@ -68,7 +68,7 @@ systemWindow::systemWindow(QWidget* parent)
                 );
 
     // ========================================================
-    // Device and Storage Information
+    // Storage Information
     // ========================================================
 
     const QStorageInfo root = QStorageInfo::root();
@@ -191,7 +191,7 @@ systemWindow::systemWindow(QWidget* parent)
     statusRow->addWidget(clockCard, 3);
 
     // ========================================================
-    // Right-Side Status Cards
+    // Status Cards
     // ========================================================
 
     auto* statusCards = new QVBoxLayout();
@@ -282,7 +282,10 @@ systemWindow::systemWindow(QWidget* parent)
     deviceRow->setContentsMargins(10, 6, 10, 6);
     deviceRow->setSpacing(8);
 
-    // Raspberry Pi artwork
+    // --------------------------------------------------------
+    // Raspberry Pi Artwork
+    // --------------------------------------------------------
+
     auto* deviceBadge = new QLabel();
     deviceBadge->setObjectName("deviceBadge");
 
@@ -292,7 +295,10 @@ systemWindow::systemWindow(QWidget* parent)
         QSize(32, 32)
     );
 
-    // Device text
+    // --------------------------------------------------------
+    // Device Text
+    // --------------------------------------------------------
+
     auto* deviceInfo = new QVBoxLayout();
     deviceInfo->setSpacing(2);
 
@@ -309,7 +315,10 @@ systemWindow::systemWindow(QWidget* parent)
     deviceInfo->addWidget(ipAddress);
     deviceInfo->addWidget(storage);
 
-    // Coral artwork
+    // --------------------------------------------------------
+    // Coral Artwork
+    // --------------------------------------------------------
+
     auto* coral1 = new QLabel();
 
     setPixelArt(
@@ -326,7 +335,11 @@ systemWindow::systemWindow(QWidget* parent)
         QSize(20, 32)
     );
 
-    // Bubble artwork
+    // --------------------------------------------------------
+    // Bubbles
+    // Small bubble is above the larger bubble.
+    // --------------------------------------------------------
+
     auto* bubble7 = new QLabel();
 
     setPixelArt(
@@ -343,22 +356,12 @@ systemWindow::systemWindow(QWidget* parent)
         QSize(10, 10)
     );
 
-    // Bubbles are horizontal.
-    auto* bubbleRow = new QHBoxLayout();
-    bubbleRow->setContentsMargins(0, 0, 0, 0);
-    bubbleRow->setSpacing(2);
-    bubbleRow->setAlignment(Qt::AlignVCenter);
-
-    bubbleRow->addWidget(bubble7);
-    bubbleRow->addWidget(bubble10);
-
-// ======================== Device Decorations ========================
-
-    // Small bubble above the larger bubble.
     auto* bubbleColumn = new QVBoxLayout();
     bubbleColumn->setContentsMargins(0, 0, 0, 0);
     bubbleColumn->setSpacing(3);
-    bubbleColumn->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    bubbleColumn->setAlignment(
+        Qt::AlignHCenter | Qt::AlignBottom
+    );
 
     bubbleColumn->addWidget(
         bubble7,
@@ -372,11 +375,19 @@ systemWindow::systemWindow(QWidget* parent)
         Qt::AlignHCenter
     );
 
-    // Bubbles on the left, coral pieces side-by-side on the right.
+    // --------------------------------------------------------
+    // Decoration Layout
+    // Bubbles are on the left.
+    // Coral pieces are side-by-side on the right.
+    // Everything aligns with the bottom of the card.
+    // --------------------------------------------------------
+
     auto* decorationLayout = new QHBoxLayout();
     decorationLayout->setContentsMargins(0, 0, 0, 0);
     decorationLayout->setSpacing(4);
-    decorationLayout->setAlignment(Qt::AlignRight | Qt::AlignBottom);
+    decorationLayout->setAlignment(
+        Qt::AlignRight | Qt::AlignBottom
+    );
 
     decorationLayout->addLayout(bubbleColumn);
 
@@ -392,8 +403,11 @@ systemWindow::systemWindow(QWidget* parent)
         Qt::AlignBottom
     );
 
-    // Build device row
-   deviceRow->addWidget(deviceBadge);
+    // --------------------------------------------------------
+    // Build Device Row
+    // --------------------------------------------------------
+
+    deviceRow->addWidget(deviceBadge);
     deviceRow->addLayout(deviceInfo);
     deviceRow->addStretch();
     deviceRow->addLayout(decorationLayout);
@@ -550,7 +564,6 @@ systemWindow::systemWindow(QWidget* parent)
     auto* btnBack = new QPushButton("Back");
     btnBack->setObjectName("btnHome");
 
-    // This requires back_arrow.png to be in the .qrc file.
     btnBack->setIcon(
         QIcon(":/assets/back_arrow.png")
     );
@@ -675,7 +688,8 @@ systemWindow::systemWindow(QWidget* parent)
             ":/assets/wifi_connected.png",
             QSize(32, 24)
         );
-    } else {
+    }
+    else {
         wifi->setText("Wi-Fi: disconnected");
 
         setPixelArt(

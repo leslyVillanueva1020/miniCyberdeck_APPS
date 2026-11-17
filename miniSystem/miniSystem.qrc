@@ -35,6 +35,13 @@
         <file alias="shutdown_icon.png">assets/miniSystem/shutdown_icon.png</file>
 
         <file alias="back_arrow.png">assets/miniSystem/back_arrow.png</file>
+    </qresource>
 
+    <qresource prefix="/fonts">
+        <file alias="PixelifySans-Regular.ttf">fonts/PixelifySans-Regular.ttf</file>
+
+        <file alias="PixelifySans-Medium.ttf">fonts/PixelifySans-Medium.ttf</file>
+
+        <file alias="PixelifySans-SemiBold.ttf">fonts/PixelifySans-SemiBold.ttf</file>
     </qresource>
 </RCC>

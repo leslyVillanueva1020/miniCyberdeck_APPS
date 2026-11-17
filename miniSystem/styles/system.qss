@@ -1,26 +1,30 @@
 /* =========================================================
-   Global Page Styling
+   Global Application Styling
    ========================================================= */
+
+QWidget {
+    font-family: "Pixelify Sans";
+    color: #493D73;
+    font-size: 14px;
+}
 
 QWidget#overviewPage,
 QWidget#settingsPage {
     background-color: #FFF2DE;
     color: #493D73;
-    font-family: "Pixelify Sans";
-    font-size: 14px;
     border: 2px solid #9B88C8;
     border-radius: 14px;
 }
+
+/* =========================================================
+   Labels
+   ========================================================= */
 
 QLabel {
     background-color: transparent;
     color: #493D73;
     border: none;
 }
-
-/* =========================================================
-   Text Styling
-   ========================================================= */
 
 QLabel#pageTitle {
     font-family: "Pixelify Sans";
@@ -36,13 +40,14 @@ QLabel#settingsTitle {
 
 QLabel#timeLabel {
     font-family: "Pixelify Sans";
-    font-size: 34px;
+    font-size: 36px;
     font-weight: 600;
 }
 
 QLabel#dateLabel {
     font-family: "Pixelify Sans";
     font-size: 16px;
+    font-weight: 500;
 }
 
 QLabel#cardTitle {
@@ -54,16 +59,18 @@ QLabel#cardTitle {
 QLabel#smallText {
     font-family: "Pixelify Sans";
     font-size: 12px;
+    font-weight: 500;
 }
+
+/* =========================================================
+   Decorative Artwork
+   ========================================================= */
 
 QLabel#fishIcon {
     background-color: transparent;
     border: none;
+    padding: 0px;
 }
-
-/* =========================================================
-   Device Artwork
-   ========================================================= */
 
 QLabel#deviceBadge {
     background-color: transparent;
@@ -73,7 +80,17 @@ QLabel#deviceBadge {
 }
 
 /* =========================================================
-   Cards
+   Header
+   ========================================================= */
+
+QFrame#appHeader {
+    background-color: #D9CEF5;
+    border: 2px solid #9B88C8;
+    border-radius: 12px;
+}
+
+/* =========================================================
+   Overview Cards
    ========================================================= */
 
 QFrame#clockCard {
@@ -95,16 +112,19 @@ QFrame#wifiCard {
     border-radius: 12px;
 }
 
-QFrame#deviceCard,
-QFrame#settingsCard {
+QFrame#deviceCard {
     background-color: #FFF8EF;
     border: 2px solid #B4A3D9;
     border-radius: 12px;
 }
 
-QFrame#appHeader {
-    background-color: #D9CEF5;
-    border: 2px solid #9B88C8;
+/* =========================================================
+   Settings Cards
+   ========================================================= */
+
+QFrame#settingsCard {
+    background-color: #FFF8EF;
+    border: 2px solid #B4A3D9;
     border-radius: 12px;
 }
 
@@ -115,13 +135,21 @@ QFrame#appHeader {
 QPushButton {
     min-height: 32px;
     padding: 4px 10px;
+
     color: #493D73;
     background-color: #D9CEF5;
+
     border: 2px solid #8F7CBD;
     border-radius: 10px;
+
     font-family: "Pixelify Sans";
     font-size: 14px;
     font-weight: 600;
+}
+
+QPushButton#btnHome {
+    background-color: #D9CEF5;
+    border-color: #8F7CBD;
 }
 
 QPushButton#btnShutdown {
@@ -132,6 +160,7 @@ QPushButton#btnShutdown {
 
 QPushButton#btnSettings {
     background-color: #FFE49A;
+    border-color: #C9A64D;
 }
 
 QPushButton:hover {
@@ -158,9 +187,15 @@ QSlider::sub-page:horizontal {
     border-radius: 6px;
 }
 
+QSlider::add-page:horizontal {
+    background-color: #D7CFF0;
+    border-radius: 6px;
+}
+
 QSlider::handle:horizontal {
     width: 20px;
-    margin: -5px 0;
+    margin: -5px 0px;
+
     background-color: #FFE49A;
     border: 2px solid #493D73;
     border-radius: 11px;
@@ -173,6 +208,7 @@ QSlider::handle:horizontal {
 QCheckBox {
     spacing: 8px;
     color: #493D73;
+
     font-family: "Pixelify Sans";
     font-size: 14px;
     font-weight: 600;
@@ -181,6 +217,7 @@ QCheckBox {
 QCheckBox::indicator {
     width: 46px;
     height: 26px;
+
     background-color: #D9CEF5;
     border: 2px solid #8F7CBD;
     border-radius: 13px;
