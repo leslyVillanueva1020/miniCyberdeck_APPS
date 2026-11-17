@@ -1,8 +1,12 @@
+/* =========================================================
+   Global Page Styling
+   ========================================================= */
+
 QWidget#overviewPage,
 QWidget#settingsPage {
     background-color: #FFF2DE;
     color: #493D73;
-    font-family: "Trebuchet MS";
+    font-family: "Pixelify Sans";
     font-size: 14px;
     border: 2px solid #9B88C8;
     border-radius: 14px;
@@ -14,49 +18,63 @@ QLabel {
     border: none;
 }
 
+/* =========================================================
+   Text Styling
+   ========================================================= */
+
 QLabel#pageTitle {
-    font-size: 15px;
-    font-weight: bold;
+    font-family: "Pixelify Sans";
+    font-size: 17px;
+    font-weight: 600;
 }
 
 QLabel#settingsTitle {
-    font-family: "Courier New";
-    font-size: 25px;
-    font-weight: bold;
+    font-family: "Pixelify Sans";
+    font-size: 21px;
+    font-weight: 600;
 }
 
 QLabel#timeLabel {
-    font-family: "Courier New";
+    font-family: "Pixelify Sans";
     font-size: 34px;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 QLabel#dateLabel {
-    font-size: 15px;
+    font-family: "Pixelify Sans";
+    font-size: 16px;
 }
 
 QLabel#cardTitle {
-    font-weight: bold;
+    font-family: "Pixelify Sans";
+    font-size: 15px;
+    font-weight: 600;
 }
 
 QLabel#smallText {
+    font-family: "Pixelify Sans";
     font-size: 12px;
 }
 
 QLabel#fishIcon {
-    font-size: 20px;
+    background-color: transparent;
+    border: none;
 }
 
+/* =========================================================
+   Device Artwork
+   ========================================================= */
+
 QLabel#deviceBadge {
-    min-width: 38px;
-    max-width: 38px;
-    min-height: 38px;
-    max-height: 38px;
-    background-color: #F7A0AD;
-    border: 2px solid #8F7CBD;
-    border-radius: 19px;
-    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    padding: 0px;
 }
+
+/* =========================================================
+   Cards
+   ========================================================= */
 
 QFrame#clockCard {
     min-height: 100px;
@@ -84,6 +102,16 @@ QFrame#settingsCard {
     border-radius: 12px;
 }
 
+QFrame#appHeader {
+    background-color: #D9CEF5;
+    border: 2px solid #9B88C8;
+    border-radius: 12px;
+}
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+
 QPushButton {
     min-height: 32px;
     padding: 4px 10px;
@@ -91,11 +119,13 @@ QPushButton {
     background-color: #D9CEF5;
     border: 2px solid #8F7CBD;
     border-radius: 10px;
-    font-weight: bold;
+    font-family: "Pixelify Sans";
+    font-size: 14px;
+    font-weight: 600;
 }
 
 QPushButton#btnShutdown {
-    color: white;
+    color: #FFFFFF;
     background-color: #F47D87;
     border-color: #B95768;
 }
@@ -107,6 +137,15 @@ QPushButton#btnSettings {
 QPushButton:hover {
     border-color: #493D73;
 }
+
+QPushButton:pressed {
+    padding-top: 6px;
+    padding-left: 12px;
+}
+
+/* =========================================================
+   Brightness Slider
+   ========================================================= */
 
 QSlider::groove:horizontal {
     height: 12px;
@@ -127,10 +166,16 @@ QSlider::handle:horizontal {
     border-radius: 11px;
 }
 
+/* =========================================================
+   Bluetooth Toggle
+   ========================================================= */
+
 QCheckBox {
     spacing: 8px;
     color: #493D73;
-    font-weight: bold;
+    font-family: "Pixelify Sans";
+    font-size: 14px;
+    font-weight: 600;
 }
 
 QCheckBox::indicator {
@@ -144,10 +189,4 @@ QCheckBox::indicator {
 QCheckBox::indicator:checked {
     background-color: #35CDB8;
     border-color: #287F79;
-}
-
-QFrame#appHeader {
-    background-color: #D9CEF5;
-    border: 2px solid #9B88C8;
-    border-radius: 12px;
 }
