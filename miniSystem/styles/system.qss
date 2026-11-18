@@ -1,5 +1,5 @@
 /* =========================================================
-   Global Application Styling
+   Global application styling
    ========================================================= */
 
 QWidget {
@@ -30,6 +30,15 @@ QLabel#pageTitle {
     font-family: "Pixelify Sans";
     font-size: 17px;
     font-weight: 600;
+}
+
+QLabel#sectionTitle {
+    background-color: transparent;
+    color: #493D73;
+    font-family: "Pixelify Sans";
+    font-size: 22px;
+    font-weight: 600;
+    padding: 0px;
 }
 
 QLabel#settingsTitle {
@@ -63,7 +72,7 @@ QLabel#smallText {
 }
 
 /* =========================================================
-   Decorative Artwork
+   Decorative artwork
    ========================================================= */
 
 QLabel#fishIcon {
@@ -80,7 +89,7 @@ QLabel#deviceBadge {
 }
 
 /* =========================================================
-   Header
+   Shared header
    ========================================================= */
 
 QFrame#appHeader {
@@ -90,7 +99,7 @@ QFrame#appHeader {
 }
 
 /* =========================================================
-   Overview Cards
+   Overview cards
    ========================================================= */
 
 QFrame#clockCard {
@@ -119,7 +128,7 @@ QFrame#deviceCard {
 }
 
 /* =========================================================
-   Settings Cards
+   Settings cards
    ========================================================= */
 
 QFrame#settingsCard {
@@ -173,7 +182,7 @@ QPushButton:pressed {
 }
 
 /* =========================================================
-   Brightness Slider
+   Brightness slider
    ========================================================= */
 
 QSlider::groove:horizontal {
@@ -202,7 +211,7 @@ QSlider::handle:horizontal {
 }
 
 /* =========================================================
-   Bluetooth Toggle
+   Bluetooth toggle
    ========================================================= */
 
 QCheckBox {

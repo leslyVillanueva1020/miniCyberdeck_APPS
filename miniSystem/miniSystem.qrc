@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/assets">
 
+        <!-- Battery artwork -->
         <file alias="charging_1.png">assets/miniSystem/1st_charging.png</file>
         <file alias="charging_2.png">assets/miniSystem/2nd_charging.png</file>
         <file alias="charging_3.png">assets/miniSystem/3rd_charging.png</file>
@@ -13,28 +14,30 @@
         <file alias="battery_75_percent.png">assets/miniSystem/battery_75_percent.png</file>
         <file alias="full_battery.png">assets/miniSystem/full_battery.png</file>
 
+        <!-- Wi-Fi and Bluetooth artwork -->
         <file alias="wifi_connected.png">assets/miniSystem/wifi_connected.png</file>
         <file alias="wifi_disconnected_1.png">assets/miniSystem/wifi_disconnected_1.png</file>
         <file alias="wifi_disconnected_2.png">assets/miniSystem/wifi_disconnected_2.png</file>
-
         <file alias="bluetooth_icon.png">assets/miniSystem/bluetooth_icon.png</file>
+
+        <!-- Overview and settings artwork -->
         <file alias="raspberry_pi.png">assets/miniSystem/raspberry_Pi.png</file>
         <file alias="sun.png">assets/miniSystem/sun.png</file>
         <file alias="sunset.png">assets/miniSystem/sunset.png</file>
-
         <file alias="fish_header.png">assets/miniSystem/fish_header.png</file>
         <file alias="title_fish.png">assets/miniSystem/2nd_fish.png</file>
 
+        <!-- Coral and combined bubbles -->
         <file alias="coral1.png">assets/miniSystem/coral1.png</file>
         <file alias="coral2.png">assets/miniSystem/coral2.png</file>
+        <file alias="two_bubbles.png">assets/miniSystem/two_bubbles.png</file>
         <file alias="bubbles.png">assets/miniSystem/bubbles.png</file>
-        <file alias="bubble_7x7.png">assets/miniSystem/7x7Bubble.png</file>
-        <file alias="bubble_10x10.png">assets/miniSystem/10x10Bubble.png</file>
 
+        <!-- Button artwork -->
         <file alias="settings.png">assets/miniSystem/settings.png</file>
         <file alias="shutdown_icon.png">assets/miniSystem/shutdown_icon.png</file>
-
         <file alias="back_arrow.png">assets/miniSystem/back_arrow.png</file>
+
     </qresource>
 
     <qresource prefix="/fonts">

@@ -21,7 +21,7 @@
 #include <QVBoxLayout>
 
 // ============================================================
-// Pixel-Art Helper
+// Pixel-art helper
 // ============================================================
 
 static void setPixelArt(
@@ -29,7 +29,7 @@ static void setPixelArt(
     const QString& resourcePath,
     const QSize& size)
 {
-    QPixmap pixmap(resourcePath);
+    const QPixmap pixmap(resourcePath);
 
     if (pixmap.isNull()) {
         qDebug() << "Could not load artwork:" << resourcePath;
@@ -58,17 +58,14 @@ systemWindow::systemWindow(QWidget* parent)
     setWindowTitle("miniSystem");
     resize(480, 320);
 
-    // ========================================================
-    // Resource Test
-    // ========================================================
-
     qDebug() << "Battery asset exists:"
-             << QFile::exists(
-                    ":/assets/battery_50_percent.png"
-                );
+             << QFile::exists(":/assets/battery_50_percent.png");
+
+    qDebug() << "Two bubbles asset exists:"
+             << QFile::exists(":/assets/two_bubbles.png");
 
     // ========================================================
-    // Storage Information
+    // Storage information
     // ========================================================
 
     const QStorageInfo root = QStorageInfo::root();
@@ -77,7 +74,7 @@ systemWindow::systemWindow(QWidget* parent)
     qint64 freeBytes = 0;
 
     // ========================================================
-    // Main Window and Page Stack
+    // Main window and page stack
     // ========================================================
 
     auto* windowLayout = new QVBoxLayout(this);
@@ -103,53 +100,63 @@ systemWindow::systemWindow(QWidget* parent)
     overviewLayout->setContentsMargins(12, 10, 12, 10);
     overviewLayout->setSpacing(8);
 
-    // ========================================================
-    // Overview Header
-    // ========================================================
+    // --------------------------------------------------------
+    // Shared Aquarium LS header
+    // --------------------------------------------------------
 
-    auto* appHeader = new QFrame();
-    appHeader->setObjectName("appHeader");
+    auto* overviewHeader = new QFrame();
+    overviewHeader->setObjectName("appHeader");
 
-    auto* titleRow = new QHBoxLayout(appHeader);
-    titleRow->setContentsMargins(10, 4, 10, 4);
+    auto* overviewHeaderLayout =
+        new QHBoxLayout(overviewHeader);
 
-    auto* title = new QLabel("AQUARIUM LS  miniSystem");
-    title->setObjectName("pageTitle");
+    overviewHeaderLayout->setContentsMargins(10, 4, 10, 4);
+    overviewHeaderLayout->setSpacing(4);
 
-    auto* fish = new QLabel();
-    fish->setObjectName("fishIcon");
+    auto* overviewBrand =
+        new QLabel("AQUARIUM LS  miniSystem");
+
+    overviewBrand->setObjectName("pageTitle");
+
+    auto* overviewFish = new QLabel();
+    overviewFish->setObjectName("fishIcon");
 
     setPixelArt(
-        fish,
+        overviewFish,
         ":/assets/fish_header.png",
         QSize(28, 20)
     );
 
-    auto* headerBubbles = new QLabel();
+    auto* overviewHeaderBubbles = new QLabel();
 
     setPixelArt(
-        headerBubbles,
+        overviewHeaderBubbles,
         ":/assets/bubbles.png",
         QSize(28, 20)
     );
 
-    titleRow->addWidget(title);
-    titleRow->addStretch();
-    titleRow->addWidget(fish);
-    titleRow->addWidget(headerBubbles);
+    overviewHeaderLayout->addWidget(overviewBrand);
+    overviewHeaderLayout->addStretch();
+    overviewHeaderLayout->addWidget(overviewFish);
+    overviewHeaderLayout->addWidget(overviewHeaderBubbles);
 
-    overviewLayout->addWidget(appHeader);
+    overviewLayout->addWidget(overviewHeader);
+
+    // IMPORTANT:
+    // There is intentionally no Overview title row here.
+    // The main page goes directly to the clock, battery,
+    // and Wi-Fi section.
 
     // ========================================================
-    // Clock, Battery, and Wi-Fi Section
+    // Clock, battery, and Wi-Fi section
     // ========================================================
 
     auto* statusRow = new QHBoxLayout();
     statusRow->setSpacing(8);
 
-    // ========================================================
-    // Clock Card
-    // ========================================================
+    // --------------------------------------------------------
+    // Clock card
+    // --------------------------------------------------------
 
     auto* clockCard = new QFrame();
     clockCard->setObjectName("clockCard");
@@ -164,6 +171,7 @@ systemWindow::systemWindow(QWidget* parent)
     clockLayout->setContentsMargins(10, 8, 10, 8);
 
     auto* clockTextLayout = new QVBoxLayout();
+    clockTextLayout->setSpacing(2);
 
     clockTextLayout->addStretch();
     clockTextLayout->addWidget(timeLabel);
@@ -190,16 +198,16 @@ systemWindow::systemWindow(QWidget* parent)
 
     statusRow->addWidget(clockCard, 3);
 
-    // ========================================================
-    // Status Cards
-    // ========================================================
+    // --------------------------------------------------------
+    // Battery and Wi-Fi cards
+    // --------------------------------------------------------
 
     auto* statusCards = new QVBoxLayout();
     statusCards->setSpacing(8);
 
-    // ========================================================
-    // Battery Card
-    // ========================================================
+    // --------------------------------------------------------
+    // Battery card
+    // --------------------------------------------------------
 
     auto* batteryCard = new QFrame();
     batteryCard->setObjectName("batteryCard");
@@ -222,18 +230,20 @@ systemWindow::systemWindow(QWidget* parent)
     charging->setObjectName("smallText");
 
     auto* batteryTextLayout = new QVBoxLayout();
+    batteryTextLayout->setSpacing(2);
     batteryTextLayout->addWidget(battery);
     batteryTextLayout->addWidget(charging);
 
     auto* batteryRow = new QHBoxLayout();
+    batteryRow->setSpacing(8);
     batteryRow->addWidget(batteryIcon);
     batteryRow->addLayout(batteryTextLayout);
 
     batteryLayout->addLayout(batteryRow);
 
-    // ========================================================
-    // Wi-Fi Card
-    // ========================================================
+    // --------------------------------------------------------
+    // Wi-Fi card
+    // --------------------------------------------------------
 
     auto* wifiCard = new QFrame();
     wifiCard->setObjectName("wifiCard");
@@ -245,21 +255,23 @@ systemWindow::systemWindow(QWidget* parent)
 
     setPixelArt(
         wifiIcon,
-        ":/assets/wifi_connected.png",
+        ":/assets/wifi_disconnected_1.png",
         QSize(32, 24)
     );
 
-    auto* wifi = new QLabel("Wi-Fi: unknown");
+    auto* wifi = new QLabel("Wi-Fi: disconnected");
     wifi->setObjectName("cardTitle");
 
     auto* network = new QLabel("Unknown Wi-Fi");
     network->setObjectName("smallText");
 
     auto* wifiTextLayout = new QVBoxLayout();
+    wifiTextLayout->setSpacing(2);
     wifiTextLayout->addWidget(wifi);
     wifiTextLayout->addWidget(network);
 
     auto* wifiRow = new QHBoxLayout();
+    wifiRow->setSpacing(8);
     wifiRow->addWidget(wifiIcon);
     wifiRow->addLayout(wifiTextLayout);
 
@@ -272,7 +284,7 @@ systemWindow::systemWindow(QWidget* parent)
     overviewLayout->addLayout(statusRow, 3);
 
     // ========================================================
-    // Device Information Card
+    // Raspberry Pi device card
     // ========================================================
 
     auto* deviceCard = new QFrame();
@@ -281,10 +293,6 @@ systemWindow::systemWindow(QWidget* parent)
     auto* deviceRow = new QHBoxLayout(deviceCard);
     deviceRow->setContentsMargins(10, 6, 10, 6);
     deviceRow->setSpacing(8);
-
-    // --------------------------------------------------------
-    // Raspberry Pi Artwork
-    // --------------------------------------------------------
 
     auto* deviceBadge = new QLabel();
     deviceBadge->setObjectName("deviceBadge");
@@ -295,20 +303,18 @@ systemWindow::systemWindow(QWidget* parent)
         QSize(32, 32)
     );
 
-    // --------------------------------------------------------
-    // Device Text
-    // --------------------------------------------------------
-
     auto* deviceInfo = new QVBoxLayout();
     deviceInfo->setSpacing(2);
 
-    auto* deviceName = new QLabel("Raspberry Pi Zero 2 W");
+    auto* deviceName =
+        new QLabel("Raspberry Pi Zero 2 W");
+
     deviceName->setObjectName("cardTitle");
 
     auto* ipAddress = new QLabel("IP ???");
     ipAddress->setObjectName("smallText");
 
-    auto* storage = new QLabel("Now Loading...");
+    auto* storage = new QLabel("Storage Used: 30%");
     storage->setObjectName("smallText");
 
     deviceInfo->addWidget(deviceName);
@@ -316,71 +322,32 @@ systemWindow::systemWindow(QWidget* parent)
     deviceInfo->addWidget(storage);
 
     // --------------------------------------------------------
-    // Coral Artwork
+    // Raspberry Pi card decorations
     // --------------------------------------------------------
 
-    auto* coral1 = new QLabel();
+    auto* deviceBubbles = new QLabel();
 
     setPixelArt(
-        coral1,
+        deviceBubbles,
+        ":/assets/two_bubbles.png",
+        QSize(20, 22)
+    );
+
+    auto* deviceCoral1 = new QLabel();
+
+    setPixelArt(
+        deviceCoral1,
         ":/assets/coral1.png",
         QSize(24, 36)
     );
 
-    auto* coral2 = new QLabel();
+    auto* deviceCoral2 = new QLabel();
 
     setPixelArt(
-        coral2,
+        deviceCoral2,
         ":/assets/coral2.png",
         QSize(20, 32)
     );
-
-    // --------------------------------------------------------
-    // Bubbles
-    // Small bubble is above the larger bubble.
-    // --------------------------------------------------------
-
-    auto* bubble7 = new QLabel();
-
-    setPixelArt(
-        bubble7,
-        ":/assets/bubble_7x7.png",
-        QSize(7, 7)
-    );
-
-    auto* bubble10 = new QLabel();
-
-    setPixelArt(
-        bubble10,
-        ":/assets/bubble_10x10.png",
-        QSize(10, 10)
-    );
-
-    auto* bubbleColumn = new QVBoxLayout();
-    bubbleColumn->setContentsMargins(0, 0, 0, 0);
-    bubbleColumn->setSpacing(3);
-    bubbleColumn->setAlignment(
-        Qt::AlignHCenter | Qt::AlignBottom
-    );
-
-    bubbleColumn->addWidget(
-        bubble7,
-        0,
-        Qt::AlignHCenter
-    );
-
-    bubbleColumn->addWidget(
-        bubble10,
-        0,
-        Qt::AlignHCenter
-    );
-
-    // --------------------------------------------------------
-    // Decoration Layout
-    // Bubbles are on the left.
-    // Coral pieces are side-by-side on the right.
-    // Everything aligns with the bottom of the card.
-    // --------------------------------------------------------
 
     auto* decorationLayout = new QHBoxLayout();
     decorationLayout->setContentsMargins(0, 0, 0, 0);
@@ -389,38 +356,33 @@ systemWindow::systemWindow(QWidget* parent)
         Qt::AlignRight | Qt::AlignBottom
     );
 
-    decorationLayout->addLayout(bubbleColumn);
-
     decorationLayout->addWidget(
-        coral1,
+        deviceBubbles,
         0,
         Qt::AlignBottom
     );
 
     decorationLayout->addWidget(
-        coral2,
+        deviceCoral1,
         0,
         Qt::AlignBottom
     );
 
-    // --------------------------------------------------------
-    // Build Device Row
-    // --------------------------------------------------------
+    decorationLayout->addWidget(
+        deviceCoral2,
+        0,
+        Qt::AlignBottom
+    );
 
     deviceRow->addWidget(deviceBadge);
     deviceRow->addLayout(deviceInfo);
     deviceRow->addStretch();
     deviceRow->addLayout(decorationLayout);
 
-    deviceRow->setAlignment(
-        decorationLayout,
-        Qt::AlignRight | Qt::AlignBottom
-    );
-
     overviewLayout->addWidget(deviceCard, 2);
 
     // ========================================================
-    // Overview Buttons
+    // Overview buttons
     // ========================================================
 
     auto* overviewButtons = new QHBoxLayout();
@@ -455,44 +417,132 @@ systemWindow::systemWindow(QWidget* parent)
 
     auto* settingsLayout = new QVBoxLayout(settingsPage);
     settingsLayout->setContentsMargins(12, 10, 12, 10);
-    settingsLayout->setSpacing(10);
+    settingsLayout->setSpacing(8);
 
-    // ========================================================
-    // Settings Header
-    // ========================================================
+    // --------------------------------------------------------
+    // Settings shared Aquarium LS header
+    // --------------------------------------------------------
 
-    auto* settingsAppHeader = new QFrame();
-    settingsAppHeader->setObjectName("appHeader");
+    auto* settingsHeaderFrame = new QFrame();
+    settingsHeaderFrame->setObjectName("appHeader");
 
-    auto* settingsHeader = new QHBoxLayout(settingsAppHeader);
-    settingsHeader->setContentsMargins(10, 4, 10, 4);
+    auto* settingsHeaderLayout =
+        new QHBoxLayout(settingsHeaderFrame);
 
-    auto* settingsTitle = new QLabel("miniSystem");
-    settingsTitle->setObjectName("settingsTitle");
+    settingsHeaderLayout->setContentsMargins(10, 4, 10, 4);
+    settingsHeaderLayout->setSpacing(4);
 
-    auto* settingsFish = new QLabel();
-    settingsFish->setObjectName("fishIcon");
+    auto* settingsBrand =
+        new QLabel("AQUARIUM LS  miniSystem");
+
+    settingsBrand->setObjectName("pageTitle");
+
+    auto* settingsHeaderFish = new QLabel();
+    settingsHeaderFish->setObjectName("fishIcon");
 
     setPixelArt(
-        settingsFish,
+        settingsHeaderFish,
+        ":/assets/fish_header.png",
+        QSize(28, 20)
+    );
+
+    auto* settingsHeaderBubbles = new QLabel();
+
+    setPixelArt(
+        settingsHeaderBubbles,
+        ":/assets/bubbles.png",
+        QSize(28, 20)
+    );
+
+    settingsHeaderLayout->addWidget(settingsBrand);
+    settingsHeaderLayout->addStretch();
+    settingsHeaderLayout->addWidget(settingsHeaderFish);
+    settingsHeaderLayout->addWidget(settingsHeaderBubbles);
+
+    settingsLayout->addWidget(settingsHeaderFrame);
+
+    // --------------------------------------------------------
+    // Settings title and artwork row
+    // --------------------------------------------------------
+
+    auto* settingsTitleRow = new QHBoxLayout();
+    settingsTitleRow->setContentsMargins(4, 0, 4, 0);
+    settingsTitleRow->setSpacing(3);
+
+    auto* settingsPageTitle = new QLabel("settings");
+    settingsPageTitle->setObjectName("sectionTitle");
+
+    auto* settingsPageBubbles = new QLabel();
+
+    setPixelArt(
+        settingsPageBubbles,
+        ":/assets/two_bubbles.png",
+        QSize(20, 22)
+    );
+
+    auto* settingsPageFish = new QLabel();
+
+    setPixelArt(
+        settingsPageFish,
         ":/assets/title_fish.png",
         QSize(28, 20)
     );
 
-    settingsHeader->addWidget(settingsTitle);
-    settingsHeader->addStretch();
-    settingsHeader->addWidget(settingsFish);
+    auto* settingsPageCoral1 = new QLabel();
 
-    settingsLayout->addWidget(settingsAppHeader);
+    setPixelArt(
+        settingsPageCoral1,
+        ":/assets/coral1.png",
+        QSize(20, 32)
+    );
+
+    auto* settingsPageCoral2 = new QLabel();
+
+    setPixelArt(
+        settingsPageCoral2,
+        ":/assets/coral2.png",
+        QSize(16, 28)
+    );
+
+    settingsTitleRow->addWidget(settingsPageTitle);
+    settingsTitleRow->addStretch();
+
+    settingsTitleRow->addWidget(
+        settingsPageBubbles,
+        0,
+        Qt::AlignBottom
+    );
+
+    settingsTitleRow->addWidget(
+        settingsPageFish,
+        0,
+        Qt::AlignBottom
+    );
+
+    settingsTitleRow->addWidget(
+        settingsPageCoral1,
+        0,
+        Qt::AlignBottom
+    );
+
+    settingsTitleRow->addWidget(
+        settingsPageCoral2,
+        0,
+        Qt::AlignBottom
+    );
+
+    settingsLayout->addLayout(settingsTitleRow);
 
     // ========================================================
-    // Brightness Card
+    // Brightness card
     // ========================================================
 
     auto* brightnessCard = new QFrame();
     brightnessCard->setObjectName("settingsCard");
 
-    auto* brightnessLayout = new QVBoxLayout(brightnessCard);
+    auto* brightnessLayout =
+        new QVBoxLayout(brightnessCard);
+
     brightnessLayout->setContentsMargins(12, 8, 12, 8);
 
     auto* brightnessHeader = new QHBoxLayout();
@@ -505,7 +555,9 @@ systemWindow::systemWindow(QWidget* parent)
         QSize(28, 28)
     );
 
-    auto* brightnessLabel = new QLabel("Screen brightness");
+    auto* brightnessLabel =
+        new QLabel("Screen brightness");
+
     brightnessLabel->setObjectName("cardTitle");
 
     auto* brightnessValue = new QLabel("70%");
@@ -516,7 +568,9 @@ systemWindow::systemWindow(QWidget* parent)
     brightnessHeader->addStretch();
     brightnessHeader->addWidget(brightnessValue);
 
-    auto* brightnessSlider = new QSlider(Qt::Horizontal);
+    auto* brightnessSlider =
+        new QSlider(Qt::Horizontal);
+
     brightnessSlider->setRange(0, 100);
     brightnessSlider->setValue(70);
 
@@ -526,13 +580,15 @@ systemWindow::systemWindow(QWidget* parent)
     settingsLayout->addWidget(brightnessCard);
 
     // ========================================================
-    // Bluetooth Card
+    // Bluetooth card
     // ========================================================
 
     auto* bluetoothCard = new QFrame();
     bluetoothCard->setObjectName("settingsCard");
 
-    auto* bluetoothLayout = new QHBoxLayout(bluetoothCard);
+    auto* bluetoothLayout =
+        new QHBoxLayout(bluetoothCard);
+
     bluetoothLayout->setContentsMargins(12, 8, 12, 8);
 
     auto* bluetoothIcon = new QLabel();
@@ -543,10 +599,14 @@ systemWindow::systemWindow(QWidget* parent)
         QSize(24, 28)
     );
 
-    auto* bluetoothText = new QLabel("Bluetooth");
+    auto* bluetoothText =
+        new QLabel("Bluetooth");
+
     bluetoothText->setObjectName("cardTitle");
 
-    auto* bluetoothToggle = new QCheckBox("On");
+    auto* bluetoothToggle =
+        new QCheckBox("On");
+
     bluetoothToggle->setObjectName("bluetoothToggle");
 
     bluetoothLayout->addWidget(bluetoothIcon);
@@ -558,12 +618,11 @@ systemWindow::systemWindow(QWidget* parent)
     settingsLayout->addStretch();
 
     // ========================================================
-    // Back Button
+    // Back button
     // ========================================================
 
     auto* btnBack = new QPushButton("Back");
     btnBack->setObjectName("btnHome");
-
     btnBack->setIcon(
         QIcon(":/assets/back_arrow.png")
     );
@@ -572,7 +631,7 @@ systemWindow::systemWindow(QWidget* parent)
     settingsLayout->addWidget(btnBack);
 
     // ========================================================
-    // Storage Information
+    // Storage information
     // ========================================================
 
     if (root.isValid() && root.isReady()) {
@@ -593,30 +652,30 @@ systemWindow::systemWindow(QWidget* parent)
     }
 
     // ========================================================
-    // Bluetooth Information
+    // Bluetooth status
     // ========================================================
 
-    auto* statusProcess = new QProcess(this);
+    auto* bluetoothStatusProcess = new QProcess(this);
 
     connect(
-        statusProcess,
+        bluetoothStatusProcess,
         &QProcess::finished,
         this,
-        [statusProcess, bluetoothToggle]()
+        [bluetoothStatusProcess, bluetoothToggle]()
         {
-            const QString status =
+            const QString output =
                 QString::fromUtf8(
-                    statusProcess->readAllStandardOutput()
+                    bluetoothStatusProcess
+                        ->readAllStandardOutput()
                 );
 
-            const bool isPowered =
-                status.contains("Powered: yes");
-
-            bluetoothToggle->setChecked(isPowered);
+            bluetoothToggle->setChecked(
+                output.contains("Powered: yes")
+            );
         }
     );
 
-    statusProcess->start(
+    bluetoothStatusProcess->start(
         "bluetoothctl",
         {"show"}
     );
@@ -625,7 +684,7 @@ systemWindow::systemWindow(QWidget* parent)
         bluetoothToggle,
         &QCheckBox::clicked,
         this,
-        [this, statusProcess](bool checked)
+        [this, bluetoothStatusProcess](bool checked)
         {
             auto* powerProcess = new QProcess(this);
 
@@ -633,9 +692,9 @@ systemWindow::systemWindow(QWidget* parent)
                 powerProcess,
                 &QProcess::finished,
                 this,
-                [statusProcess, powerProcess]()
+                [powerProcess, bluetoothStatusProcess]()
                 {
-                    statusProcess->start(
+                    bluetoothStatusProcess->start(
                         "bluetoothctl",
                         {"show"}
                     );
@@ -644,21 +703,21 @@ systemWindow::systemWindow(QWidget* parent)
                 }
             );
 
-            const QString action =
-                checked ? "on" : "off";
-
             powerProcess->start(
                 "bluetoothctl",
-                {"power", action}
+                {
+                    "power",
+                    checked ? "on" : "off"
+                }
             );
         }
     );
 
     // ========================================================
-    // Network Information
+    // Network information
     // ========================================================
 
-    bool found = false;
+    bool foundNetwork = false;
 
     for (const QNetworkInterface& interface
          : QNetworkInterface::allInterfaces()) {
@@ -666,21 +725,22 @@ systemWindow::systemWindow(QWidget* parent)
         for (const QNetworkAddressEntry& entry
              : interface.addressEntries()) {
 
-            if (interface.name() == "wlan0"
+            if (
+                interface.name() == "wlan0"
                 && entry.ip().protocol()
-                   == QAbstractSocket::IPv4Protocol) {
-
+                   == QAbstractSocket::IPv4Protocol
+            ) {
                 ipAddress->setText(
                     QString("IP %1")
                         .arg(entry.ip().toString())
                 );
 
-                found = true;
+                foundNetwork = true;
             }
         }
     }
 
-    if (found) {
+    if (foundNetwork) {
         wifi->setText("Wi-Fi: connected");
 
         setPixelArt(
@@ -707,21 +767,18 @@ systemWindow::systemWindow(QWidget* parent)
         this,
         [networkProcess, network]()
         {
-            const QString wifiOutput =
+            const QString output =
                 QString::fromUtf8(
                     networkProcess->readAllStandardOutput()
                 );
 
-            const QStringList lines =
-                wifiOutput.split('\n');
+            for (const QString& line
+                 : output.split('\n')) {
 
-            for (const QString& line : lines) {
                 if (line.startsWith("*:")) {
-                    const QString wifiName =
-                        line.sliced(2).trimmed();
-
                     network->setText(
-                        wifiName + " Wi-Fi"
+                        line.sliced(2).trimmed()
+                        + " Wi-Fi"
                     );
 
                     break;
@@ -742,7 +799,7 @@ systemWindow::systemWindow(QWidget* parent)
     );
 
     // ========================================================
-    // Battery Information
+    // Battery information
     // ========================================================
 
     auto* socket = new QLocalSocket(this);
@@ -754,12 +811,8 @@ systemWindow::systemWindow(QWidget* parent)
         [socket]()
         {
             socket->write("get battery\n");
-            socket->write(
-                "get battery_power_plugged\n"
-            );
-            socket->write(
-                "get battery_allow_charging\n"
-            );
+            socket->write("get battery_power_plugged\n");
+            socket->write("get battery_allow_charging\n");
         }
     );
 
@@ -775,16 +828,13 @@ systemWindow::systemWindow(QWidget* parent)
                         socket->readLine()
                     ).trimmed();
 
-                qDebug() << line;
-
                 if (line.startsWith("battery:")) {
-                    const QString numberText =
-                        line.section(':', 1).trimmed();
-
                     bool ok = false;
 
                     const double value =
-                        numberText.toDouble(&ok);
+                        line.section(':', 1)
+                            .trimmed()
+                            .toDouble(&ok);
 
                     if (ok) {
                         battery->setText(
@@ -798,11 +848,10 @@ systemWindow::systemWindow(QWidget* parent)
                         "battery_power_plugged:"
                     )
                 ) {
-                    const QString valueText =
-                        line.section(':', 1).trimmed();
-
                     powerPlugged =
-                        (valueText == "true");
+                        line.section(':', 1)
+                            .trimmed()
+                            == "true";
 
                     gotPowerPlugged = true;
                 }
@@ -811,11 +860,10 @@ systemWindow::systemWindow(QWidget* parent)
                         "battery_allow_charging:"
                     )
                 ) {
-                    const QString valueText =
-                        line.section(':', 1).trimmed();
-
                     chargingAllowed =
-                        (valueText == "true");
+                        line.section(':', 1)
+                            .trimmed()
+                            == "true";
 
                     gotChargingAllowed = true;
                 }
@@ -853,7 +901,7 @@ systemWindow::systemWindow(QWidget* parent)
     );
 
     // ========================================================
-    // Clock and Date
+    // Clock and date
     // ========================================================
 
     connect(
@@ -870,7 +918,7 @@ systemWindow::systemWindow(QWidget* parent)
     clockTimer->start(1000);
 
     // ========================================================
-    // Shutdown Logic
+    // Shutdown logic
     // ========================================================
 
     connect(
@@ -921,7 +969,8 @@ systemWindow::systemWindow(QWidget* parent)
 
                         qDebug()
                             << "Error output:"
-                            << process->readAllStandardError();
+                            << process
+                                   ->readAllStandardError();
                     }
                 );
 
@@ -939,7 +988,8 @@ systemWindow::systemWindow(QWidget* parent)
                         ) {
                             qDebug()
                                 << "Could not start program:"
-                                << process->errorString();
+                                << process
+                                       ->errorString();
                         }
                     }
                 );
@@ -953,7 +1003,7 @@ systemWindow::systemWindow(QWidget* parent)
     );
 
     // ========================================================
-    // Page Navigation
+    // Page navigation
     // ========================================================
 
     connect(
@@ -969,9 +1019,7 @@ systemWindow::systemWindow(QWidget* parent)
         this,
         [this]()
         {
-            pageStack->setCurrentWidget(
-                settingsPage
-            );
+            pageStack->setCurrentWidget(settingsPage);
         }
     );
 
@@ -981,14 +1029,12 @@ systemWindow::systemWindow(QWidget* parent)
         this,
         [this]()
         {
-            pageStack->setCurrentWidget(
-                overviewPage
-            );
+            pageStack->setCurrentWidget(overviewPage);
         }
     );
 
     // ========================================================
-    // Brightness Slider
+    // Brightness slider
     // ========================================================
 
     connect(
@@ -1005,7 +1051,7 @@ systemWindow::systemWindow(QWidget* parent)
 }
 
 // ============================================================
-// Clock Update
+// Clock update
 // ============================================================
 
 void systemWindow::updateClock()
