@@ -19,33 +19,60 @@
 #include <QStorageInfo>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QTransform>
+#include <QPainter>
 
 // ============================================================
 // Pixel-art helper
 // ============================================================
-
 static void setPixelArt(
     QLabel* label,
     const QString& resourcePath,
-    const QSize& size)
+    const QSize& size,
+    bool flipHorizontal = false,
+    int verticalOffset = 0)
 {
-    const QPixmap pixmap(resourcePath);
+    QPixmap pixmap(resourcePath);
 
     if (pixmap.isNull()) {
         qDebug() << "Could not load artwork:" << resourcePath;
         return;
     }
 
-    label->setPixmap(
+    if (flipHorizontal) {
+        pixmap = pixmap.transformed(
+            QTransform().scale(-1, 1)
+        );
+    }
+
+    QPixmap scaledPixmap =
         pixmap.scaled(
             size,
             Qt::KeepAspectRatio,
             Qt::FastTransformation
-        )
-    );
+        );
 
+    QPixmap canvas(size);
+    canvas.fill(Qt::transparent);
+
+    QPainter painter(&canvas);
+
+    const int x =
+        (size.width() - scaledPixmap.width()) / 2;
+
+    const int y =
+        (size.height() - scaledPixmap.height()) / 2
+        + verticalOffset;
+
+    painter.drawPixmap(x, y, scaledPixmap);
+    painter.end();
+
+    label->setPixmap(canvas);
     label->setFixedSize(size);
-    label->setAlignment(Qt::AlignCenter);
+
+    label->setAlignment(
+        Qt::AlignHCenter | Qt::AlignBottom
+    );
 }
 
 // ============================================================
@@ -291,7 +318,7 @@ systemWindow::systemWindow(QWidget* parent)
     deviceCard->setObjectName("deviceCard");
 
     auto* deviceRow = new QHBoxLayout(deviceCard);
-    deviceRow->setContentsMargins(10, 6, 10, 6);
+    deviceRow->setContentsMargins(10, 6, 10, 0);
     deviceRow->setSpacing(8);
 
     auto* deviceBadge = new QLabel();
@@ -330,7 +357,9 @@ systemWindow::systemWindow(QWidget* parent)
     setPixelArt(
         deviceBubbles,
         ":/assets/two_bubbles.png",
-        QSize(20, 22)
+        QSize(26, 28),
+        false,
+        -5
     );
 
     auto* deviceCoral1 = new QLabel();
@@ -338,7 +367,9 @@ systemWindow::systemWindow(QWidget* parent)
     setPixelArt(
         deviceCoral1,
         ":/assets/coral1.png",
-        QSize(24, 36)
+        QSize(24, 52),
+        false,
+        8
     );
 
     auto* deviceCoral2 = new QLabel();
@@ -346,7 +377,7 @@ systemWindow::systemWindow(QWidget* parent)
     setPixelArt(
         deviceCoral2,
         ":/assets/coral2.png",
-        QSize(20, 32)
+        QSize(22, 52)
     );
 
     auto* decorationLayout = new QHBoxLayout();
@@ -477,7 +508,8 @@ systemWindow::systemWindow(QWidget* parent)
     setPixelArt(
         settingsPageBubbles,
         ":/assets/two_bubbles.png",
-        QSize(20, 22)
+        QSize(28, 30),
+        true
     );
 
     auto* settingsPageFish = new QLabel();
@@ -493,7 +525,7 @@ systemWindow::systemWindow(QWidget* parent)
     setPixelArt(
         settingsPageCoral1,
         ":/assets/coral1.png",
-        QSize(20, 32)
+        QSize(22, 44)
     );
 
     auto* settingsPageCoral2 = new QLabel();
@@ -501,7 +533,7 @@ systemWindow::systemWindow(QWidget* parent)
     setPixelArt(
         settingsPageCoral2,
         ":/assets/coral2.png",
-        QSize(16, 28)
+        QSize(20, 44)
     );
 
     settingsTitleRow->addWidget(settingsPageTitle);
